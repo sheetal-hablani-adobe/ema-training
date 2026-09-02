@@ -204,6 +204,30 @@ var CustomImportScript = (() => {
     console.log(`Found ${pageBlocks.length} block instances on page`);
     return pageBlocks;
   }
+  function addBlogTemplateMetadata(main, document) {
+    const TEMPLATE_NAME = "blog";
+    const table = [...main.querySelectorAll("table")].find((t) => {
+      const th = t.querySelector("tr th");
+      return th && th.textContent.trim().toLowerCase() === "metadata";
+    });
+    if (!table) return;
+    const existing = [...table.querySelectorAll("tr")].find((tr) => {
+      const key = tr.querySelector("td");
+      return key && key.textContent.trim().toLowerCase() === "template";
+    });
+    if (existing) {
+      const valueCell = existing.querySelector("td:last-child");
+      if (valueCell) valueCell.textContent = TEMPLATE_NAME;
+      return;
+    }
+    const row = document.createElement("tr");
+    const keyCell = document.createElement("td");
+    keyCell.textContent = "template";
+    const valueCell = document.createElement("td");
+    valueCell.textContent = TEMPLATE_NAME;
+    row.append(keyCell, valueCell);
+    table.append(row);
+  }
   var import_blog_default = {
     transform: (payload) => {
       const { document, url, html, params } = payload;
@@ -229,6 +253,7 @@ var CustomImportScript = (() => {
       WebImporter.rules.createMetadata(main, document);
       WebImporter.rules.transformBackgroundImages(main, document);
       WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
+      addBlogTemplateMetadata(main, document);
       const rawPath = new URL(params.originalURL).pathname.replace(/\/$/, "").replace(/\.html?$/, "");
       const path = WebImporter.FileUtils.sanitizePath(rawPath === "" ? "/index" : rawPath);
       return [{

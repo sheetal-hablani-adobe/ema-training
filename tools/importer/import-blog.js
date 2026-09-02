@@ -81,6 +81,47 @@ function findBlocksOnPage(document, template) {
   return pageBlocks;
 }
 
+/**
+ * Ensure the generated Metadata block carries `Template = blog`.
+ *
+ * WebImporter.rules.createMetadata() appends a Metadata block to `main` as a
+ * <table> whose first row is a <th> header ("Metadata") followed by
+ * <tr><td>key</td><td>value</td></tr> rows. We add (or update) a `Template`
+ * row so the published page sets `<body class="blog">` via scripts.js
+ * (decorateTemplateAndTheme). That is what scopes the centered reading-column
+ * layout in styles.css. Idempotent: updates the row if it already exists.
+ */
+function addBlogTemplateMetadata(main, document) {
+  const TEMPLATE_NAME = 'blog';
+
+  // Locate the Metadata table (header th text === "Metadata").
+  const table = [...main.querySelectorAll('table')].find((t) => {
+    const th = t.querySelector('tr th');
+    return th && th.textContent.trim().toLowerCase() === 'metadata';
+  });
+  if (!table) return;
+
+  // Update an existing Template row if present.
+  const existing = [...table.querySelectorAll('tr')].find((tr) => {
+    const key = tr.querySelector('td');
+    return key && key.textContent.trim().toLowerCase() === 'template';
+  });
+  if (existing) {
+    const valueCell = existing.querySelector('td:last-child');
+    if (valueCell) valueCell.textContent = TEMPLATE_NAME;
+    return;
+  }
+
+  // Otherwise append a new key/value row.
+  const row = document.createElement('tr');
+  const keyCell = document.createElement('td');
+  keyCell.textContent = 'template';
+  const valueCell = document.createElement('td');
+  valueCell.textContent = TEMPLATE_NAME;
+  row.append(keyCell, valueCell);
+  table.append(row);
+}
+
 // EXPORT DEFAULT CONFIGURATION
 export default {
   transform: (payload) => {
@@ -118,6 +159,14 @@ export default {
     WebImporter.rules.createMetadata(main, document);
     WebImporter.rules.transformBackgroundImages(main, document);
     WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
+
+    // 5b. Tag the page with the blog template so scripts.js adds
+    // `class="blog"` to <body>. The source renders the article body (prose +
+    // spec table) as a centered ~768px reading column while the header stays
+    // wide; that layout is scoped in styles.css under `body.blog`. Emitting the
+    // Template metadata here makes every blog page pick it up automatically on
+    // bulk import (no per-page DA edit needed).
+    addBlogTemplateMetadata(main, document);
 
     // 6. Generate sanitized path
     const rawPath = new URL(params.originalURL).pathname
