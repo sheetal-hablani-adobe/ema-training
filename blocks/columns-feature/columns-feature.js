@@ -14,17 +14,20 @@ export default function decorate(block) {
       if (p.querySelector('a')) p.classList.add('columns-feature-cta');
     });
   } else {
-    // Non-hero (e.g. article intro): a paragraph of 2+ links with no other copy
-    // is a breadcrumb trail. Tag it so CSS can render a chevron between crumbs
-    // (the source's inline separator SVG is dropped on import).
+    // Non-hero (e.g. article intro, split feature). A paragraph of links with no
+    // other copy is either a breadcrumb trail (2+ links) or a single CTA link.
+    // Tag each so CSS can style them without :has() (breadcrumb chevrons; solid
+    // pill CTA). The source's inline separator SVG is dropped on import.
     [...block.querySelectorAll('p')].forEach((p) => {
       const links = p.querySelectorAll(':scope > a');
       const textOutsideLinks = [...p.childNodes]
         .filter((n) => n.nodeType === Node.TEXT_NODE)
         .map((n) => n.textContent.trim())
         .join('');
-      if (links.length >= 2 && textOutsideLinks.length === 0) {
+      if (textOutsideLinks.length === 0 && links.length >= 2) {
         p.classList.add('columns-feature-breadcrumbs');
+      } else if (textOutsideLinks.length === 0 && links.length === 1) {
+        p.classList.add('columns-feature-cta');
       }
     });
   }
