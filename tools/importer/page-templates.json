@@ -93,6 +93,88 @@
         }
       ],
       "urlPattern": "/blog/*"
+    },
+    {
+      "name": "article-index",
+      "urls": [
+        "https://wknd-trendsetters.site/blog"
+      ],
+      "representativeUrl": "https://wknd-trendsetters.site/blog",
+      "description": "Blog listing / article index page",
+      "blocks": [
+        {
+          "name": "columns-feature",
+          "instances": [
+            "#main-content > header.section.secondary-section > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl",
+            "#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.tablet-1-column.grid-gap-lg"
+          ]
+        },
+        {
+          "name": "cards-media",
+          "instances": [
+            "#articles > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md"
+          ]
+        },
+        {
+          "name": "section-rc3",
+          "instances": [
+            "#articles"
+          ],
+          "section": "grey"
+        },
+        {
+          "name": "section-rc4",
+          "instances": [
+            "#main-content > section.section.accent-section"
+          ],
+          "section": "accent"
+        }
+      ]
+    },
+    {
+      "name": "trends-landing",
+      "urls": [
+        "https://wknd-trendsetters.site/fashion-trends-young-adults"
+      ],
+      "representativeUrl": "https://wknd-trendsetters.site/fashion-trends-young-adults",
+      "description": "Trends landing page (hero + feature sections + card grid)",
+      "blocks": [
+        {
+          "name": "columns-feature",
+          "instances": [
+            "#main-content > header.section.secondary-section > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl"
+          ]
+        },
+        {
+          "name": "cards-media",
+          "instances": [
+            "#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.desktop-3-column.tablet-1-column.grid-gap-xxl",
+            "#trends > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md",
+            "#main-content > section.section.secondary-section:nth-of-type(4) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-sm"
+          ]
+        },
+        {
+          "name": "section-rc3",
+          "instances": [
+            "#main-content > section.section.secondary-section:nth-of-type(2)"
+          ],
+          "section": "grey"
+        },
+        {
+          "name": "section-rc5",
+          "instances": [
+            "#main-content > section.section.secondary-section:nth-of-type(4)"
+          ],
+          "section": "grey"
+        },
+        {
+          "name": "section-rc6",
+          "instances": [
+            "#main-content > section.section.accent-section"
+          ],
+          "section": "accent"
+        }
+      ]
     }
   ]
 }

@@ -31,8 +31,12 @@
     ]
   },
   "usage": {
-    "pagesUsing": ["/about-us"],
-    "reuseCount": 2,
-    "lastUsed": "2026-09-01T00:00:00.000Z"
+    "pagesUsing": [
+      "/about-us",
+      "/fashion-trends-young-adults",
+      "/blog"
+    ],
+    "reuseCount": 4,
+    "lastUsed": "2026-09-02T00:00:00.000Z"
   }
 }
