@@ -85,23 +85,45 @@ var CustomImportScript = (() => {
     const cells = [];
     cardEls.forEach((card) => {
       const img = card.querySelector("img");
-      const textParts = Array.from(
-        card.querySelectorAll("h1, h2, h3, h4, h5, h6, p, span")
-      ).filter((el) => el.textContent.trim().length > 0);
+      const heading = card.querySelector("h1, h2, h3, h4, h5, h6");
       let textCell = "";
-      if (textParts.length) {
-        const href = card.tagName === "A" ? card.getAttribute("href") : null;
-        if (href) {
-          const link = document.createElement("a");
-          link.setAttribute("href", href);
-          textParts.forEach((el) => link.appendChild(el));
-          textCell = link;
-        } else {
-          textCell = textParts;
+      if (heading) {
+        const href = card.tagName === "A" ? card.getAttribute("href") : card.querySelector("a") && card.querySelector("a").getAttribute("href");
+        const parts = [];
+        const meta = card.querySelector(".article-card-meta") || card;
+        const metaSpans = Array.from(meta.querySelectorAll("span")).filter((s) => s.textContent.trim().length > 0);
+        const tagText = metaSpans[0] ? metaSpans[0].textContent.trim() : "";
+        const dateText = metaSpans[1] ? metaSpans[1].textContent.trim() : "";
+        if (tagText) {
+          const tagP = document.createElement("p");
+          tagP.textContent = tagText;
+          parts.push(tagP);
         }
+        if (dateText) {
+          const dateP = document.createElement("p");
+          dateP.textContent = dateText;
+          parts.push(dateP);
+        }
+        const titleEl = document.createElement(heading.tagName.toLowerCase());
+        const titleText = heading.textContent.trim();
+        if (href) {
+          const a = document.createElement("a");
+          a.setAttribute("href", href);
+          a.textContent = titleText;
+          titleEl.appendChild(a);
+        } else {
+          titleEl.textContent = titleText;
+        }
+        parts.push(titleEl);
+        textCell = parts;
+      } else {
+        const textParts = Array.from(
+          card.querySelectorAll("p, span")
+        ).filter((el) => el.textContent.trim().length > 0);
+        if (textParts.length) textCell = textParts;
       }
       const imageCell = img || "";
-      if (img || textParts.length) {
+      if (img || (Array.isArray(textCell) ? textCell.length : textCell)) {
         cells.push([imageCell, textCell]);
       }
     });
@@ -114,12 +136,34 @@ var CustomImportScript = (() => {
   }
 
   // tools/importer/parsers/columns-feature.js
+  function isImageOnlyColumn(col) {
+    if (!col.querySelector("img, picture")) return false;
+    if (col.querySelector("h1, h2, h3, h4, h5, h6, a, button")) return false;
+    return col.textContent.trim().length === 0;
+  }
+  function normaliseImageColumn(col, document) {
+    const media = Array.from(col.querySelectorAll("img, picture"));
+    if (media.length < 2) return;
+    const wrapper = document.createElement("div");
+    media.forEach((m) => {
+      const node = m.tagName === "IMG" && m.closest("picture") ? m.closest("picture") : m;
+      if (node.parentElement === wrapper) return;
+      const p = document.createElement("p");
+      p.appendChild(node);
+      wrapper.appendChild(p);
+    });
+    col.textContent = "";
+    while (wrapper.firstChild) col.appendChild(wrapper.firstChild);
+  }
   function parse3(element, { document }) {
     const columnEls = Array.from(element.querySelectorAll(":scope > div")).filter((col) => col.textContent.trim().length > 0 || col.querySelector("img, picture, a"));
     if (!columnEls.length) {
       element.replaceWith(...element.childNodes);
       return;
     }
+    columnEls.forEach((col) => {
+      if (isImageOnlyColumn(col)) normaliseImageColumn(col, document);
+    });
     const cells = [];
     cells.push(columnEls.map((col) => col));
     const block = WebImporter.Blocks.createBlock(document, { name: "columns-feature", cells });
@@ -191,8 +235,6 @@ var CustomImportScript = (() => {
     }
     if (hookName === TransformHook.afterTransform) {
       WebImporter.DOMUtils.remove(element, [
-        // In-content breadcrumb navigation (non-authorable)
-        ".breadcrumbs",
         // Site footer (logo, social icons, footer nav columns) — follows </main>
         "footer.footer",
         // Safe leftover/non-authorable elements

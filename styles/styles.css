@@ -323,3 +323,90 @@ main .section.highlight {
   margin: 0;
   padding: 40px 0;
 }
+
+/* ---------------------------------------------------------------------------
+   about-us default-content section headings (rc3 gallery, rc5 articles, rc6 FAQ).
+   These headings are authored as default content between blocks; match the
+   source's uppercase treatment and per-section alignment/background.
+   --------------------------------------------------------------------------- */
+
+/* Shared: uppercase heading treatment for a default-content wrapper that
+   introduces a following block. */
+main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) h2,
+main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) h2 {
+  margin: 0;
+  font-family: Syncopate, var(--heading-font-family);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) h2 + p,
+main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) h2 + p {
+  margin: 8px 0 0;
+  font-size: 18px;
+  color: rgb(102 102 102);
+}
+
+/* rc3 gallery + rc5 articles: centered heading on a full-bleed grey band that
+   connects to the grey card block below.
+   The boilerplate `main > .section > div { margin: auto }` resets margin-inline,
+   so set explicit left/right margins (not the shorthand) at higher specificity
+   to guarantee the full-bleed pull-out wins the cascade. */
+main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) {
+  width: auto;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: 64px 0 0;
+  background-color: rgb(245 245 245);
+  text-align: center;
+}
+
+main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) > * {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+/* The grey card block that immediately follows a heading loses its top band
+   padding so the heading and cards read as one grey section. */
+main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) + .cards-media-wrapper .cards-media {
+  padding-top: 32px;
+}
+
+/* rc6 FAQ: left-aligned heading on white (no band). */
+main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) {
+  padding-top: 64px;
+}
+
+@media (width >= 900px) {
+  main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) h2,
+  main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) h2 {
+    font-size: 40px;
+  }
+
+  main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) {
+    padding-top: 128px;
+  }
+
+  main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) {
+    padding-top: 128px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Blog template (body.blog): centered reading column.
+   The source renders the article header (columns-article) at the full 1200px
+   container width, but constrains the article BODY — the default-content prose
+   and the spec table — to a narrower, centered ~768px reading column. Scope a
+   max-width + auto margins to those wrappers so the body reads as a centered
+   column while the header stays wide. Applied via the `blog` page template,
+   which the importer stamps into page metadata so every blog page inherits it.
+   --------------------------------------------------------------------------- */
+body.blog main > .section > .default-content-wrapper,
+body.blog main > .section > .table-spec-wrapper {
+  max-width: 768px;
+  margin-inline: auto;
+}
+

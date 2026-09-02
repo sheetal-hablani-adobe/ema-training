@@ -24,31 +24,63 @@ export default function parse(element, { document }) {
 
   cardEls.forEach((card) => {
     const img = card.querySelector('img');
+    const heading = card.querySelector('h1, h2, h3, h4, h5, h6');
 
-    // Collect any text content (heading/description/CTA/meta) if present.
-    const textParts = Array.from(
-      card.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span'),
-    ).filter((el) => el.textContent.trim().length > 0);
-
-    // If the card itself is a link, preserve it by wrapping the collected text
-    // in an anchor so the card link survives into the block.
     let textCell = '';
-    if (textParts.length) {
-      const href = card.tagName === 'A' ? card.getAttribute('href') : null;
-      if (href) {
-        const link = document.createElement('a');
-        link.setAttribute('href', href);
-        textParts.forEach((el) => link.appendChild(el));
-        textCell = link;
-      } else {
-        textCell = textParts;
+
+    if (heading) {
+      // ARTICLE CARD: structured tag + date + linked title.
+      // Emit BLOCK-LEVEL elements only (paragraphs + heading), because the
+      // md round-trip flattens <span>/<div> — inline meta spans would collapse
+      // into one text run ("Casual CoolMay 12### ..."). The card href is moved
+      // onto the title (a heading-wrapped link survives as "### [title](url)").
+      const href = card.tagName === 'A' ? card.getAttribute('href') : (card.querySelector('a') && card.querySelector('a').getAttribute('href'));
+      const parts = [];
+
+      // Meta: tag pill + date, each as its own paragraph (styled inline via CSS).
+      const meta = card.querySelector('.article-card-meta') || card;
+      const metaSpans = Array.from(meta.querySelectorAll('span'))
+        .filter((s) => s.textContent.trim().length > 0);
+      const tagText = metaSpans[0] ? metaSpans[0].textContent.trim() : '';
+      const dateText = metaSpans[1] ? metaSpans[1].textContent.trim() : '';
+
+      if (tagText) {
+        const tagP = document.createElement('p');
+        tagP.textContent = tagText;
+        parts.push(tagP);
       }
+      if (dateText) {
+        const dateP = document.createElement('p');
+        dateP.textContent = dateText;
+        parts.push(dateP);
+      }
+
+      // Title heading, wrapping a link to the article when a href exists.
+      const titleEl = document.createElement(heading.tagName.toLowerCase());
+      const titleText = heading.textContent.trim();
+      if (href) {
+        const a = document.createElement('a');
+        a.setAttribute('href', href);
+        a.textContent = titleText;
+        titleEl.appendChild(a);
+      } else {
+        titleEl.textContent = titleText;
+      }
+      parts.push(titleEl);
+
+      textCell = parts;
+    } else {
+      // Non-article card (e.g. image-only gallery): collect any text present.
+      const textParts = Array.from(
+        card.querySelectorAll('p, span'),
+      ).filter((el) => el.textContent.trim().length > 0);
+      if (textParts.length) textCell = textParts;
     }
 
     const imageCell = img || '';
 
     // Skip empty children (e.g. layout-only wrappers with nothing inside).
-    if (img || textParts.length) {
+    if (img || (Array.isArray(textCell) ? textCell.length : textCell)) {
       cells.push([imageCell, textCell]);
     }
   });

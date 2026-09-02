@@ -70,6 +70,33 @@ The repository provides the basic structure, blocks, and configuration needed to
 
 ## Key Concepts
 
+### Global chrome (header, nav, footer)
+
+Header, nav, and footer are **global chrome** — they are NOT authored into
+individual pages and must never be added per page. Every page's skeleton
+includes empty `<header>`/`<footer>` elements, and `scripts/scripts.js` loads
+them lazily on every page via `loadHeader`/`loadFooter`. `blocks/header` fetches
+the shared `/nav.plain.html` fragment and `blocks/footer` fetches
+`/footer.plain.html` (both use a metadata-independent dual-fetch:
+`/content/...` first for localhost, then root for DA/EDS).
+
+Consequences for migrating or creating pages:
+- You get header/nav/footer **for free** on every page — do not touch them per page.
+- The only requirement is **per environment, once**: the `/nav` and `/footer`
+  documents must be migrated and **published** on that environment. If they are
+  missing, every page shows a blank header/footer (empty `banner`/`contentinfo`).
+- Do NOT remove the `loadHeader`/`loadFooter` calls from `scripts.js` or the
+  `<header>`/`<footer>` elements from the page skeleton.
+
+**Verify after every migration / before shipping** — confirm both chrome
+fragments resolve on the target environment:
+
+```
+node tools/importer/verify-chrome.js [baseUrl]
+# baseUrl defaults to http://localhost:3000; pass a preview/live URL to check those.
+# Exit 0 = header+footer present; exit 1 = one is missing (publish /nav and /footer).
+```
+
 ### Content
 
 CMS authored content is a key part of every AEM Website. The content of a page is broken into sections. Sections can have default content (text, headings, links, etc.) as well as content in blocks.

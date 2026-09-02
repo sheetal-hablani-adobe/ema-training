@@ -24,12 +24,13 @@ export default function transform(hookName, element, payload) {
 
   if (hookName === TransformHook.afterTransform) {
     WebImporter.DOMUtils.remove(element, [
-      // In-content breadcrumb navigation (non-authorable)
-      '.breadcrumbs',
       // Site footer (logo, social icons, footer nav columns) — follows </main>
       'footer.footer',
       // Safe leftover/non-authorable elements
       'noscript',
     ]);
+    // NOTE: `.breadcrumbs` is intentionally NOT removed. On this template the
+    // breadcrumb (e.g. "Home > Case studies") lives inside the article-intro
+    // columns-feature block and is authorable article content, not site chrome.
   }
 }

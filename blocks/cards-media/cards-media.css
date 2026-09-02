@@ -1,27 +1,175 @@
+/* Block: cards-media -- values extracted from wknd-trendsetters.site/about-us source.
+   Two instances share this file, distinguished structurally:
+   - GALLERY  (no card body link):  8 uniform rounded squares in a 4-col grid.
+   - ARTICLES (card body has a link): 4 image + text cards in a 4-col grid.
+   Instance selector: articles match :has(a); gallery matches :not(:has(a)). */
+
+/* ---------------------------------------------------------------------------
+   Shared grey full-bleed band. The block lives inside the centered
+   .section > div (max-width 1200px). calc(50% - 50vw) breaks the grey
+   background out to the viewport edges; the inner <ul> is re-centered.
+   --------------------------------------------------------------------------- */
+.cards-media {
+  width: auto;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: 64px 0;
+  background-color: rgb(245 245 245);
+}
+
 .cards-media > ul {
   list-style: none;
-  margin: 0;
-  padding: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
 
 .cards-media > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
-}
-
-.cards-media .cards-media-card-body {
-  margin: 16px;
+  margin: 0;
 }
 
 .cards-media .cards-media-card-image {
   line-height: 0;
 }
 
-.cards-media > ul > li img {
+/* ===========================================================================
+   GALLERY instance -- uniform rounded squares (gap 12px, aspect 1/1).
+   =========================================================================== */
+.cards-media:not(:has(a)) > ul {
+  gap: 12px;
+}
+
+.cards-media:not(:has(a)) .cards-media-card-image {
+  border-radius: 20px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+}
+
+.cards-media:not(:has(a)) .cards-media-card-image img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  height: 100%;
   object-fit: cover;
+}
+
+/* ===========================================================================
+   ARTICLES instance -- image + meta/title card (gap 16px).
+   Card: white, 1px grey border, 20px radius, clipped corners.
+   =========================================================================== */
+.cards-media:has(a) > ul > li {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgb(232 232 232);
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: var(--background-color);
+}
+
+/* Whole card is clickable (JS forwards clicks to the title link).
+   Hover: lift + shadow (matches source .article-card:hover), and the image
+   zooms slightly. */
+.cards-media:has(a) > ul > li.cards-media-card-link {
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cards-media:has(a) > ul > li.cards-media-card-link:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 10%);
+}
+
+.cards-media:has(a) .cards-media-card-image img {
+  width: 100%;
+  aspect-ratio: 274 / 171;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.cards-media:has(a) > ul > li.cards-media-card-link:hover .cards-media-card-image img {
+  transform: scale(1.05);
+}
+
+/* Article card body: tag pill + date meta row, then an uppercase title.
+   The parser emits the tag as the first <p>, the date as the second <p>,
+   and the title as an <h3><a>. A flex wrap arranges the two <p>s as a meta
+   row (pill + date) with the heading below. */
+.cards-media:has(a) .cards-media-card-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+}
+
+/* Tag pill -- first paragraph. */
+.cards-media:has(a) .cards-media-card-body p:first-of-type {
+  margin: 0;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background-color: rgb(244 254 139);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: rgb(0 0 0);
+}
+
+/* Date -- second paragraph, grey. */
+.cards-media:has(a) .cards-media-card-body p:nth-of-type(2) {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgb(102 102 102);
+}
+
+/* Title heading -- Syncopate uppercase, on its own row below the meta. */
+.cards-media:has(a) .cards-media-card-body h3 {
+  flex: 1 0 100%;
+  margin: 0;
+  font-family: Syncopate, var(--heading-font-family);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.cards-media:has(a) .cards-media-card-body h3 a:any-link {
+  color: rgb(0 0 0);
+  text-decoration: none;
+}
+
+.cards-media:has(a) .cards-media-card-body h3 a:any-link:hover {
+  color: rgb(0 0 0);
+  text-decoration: none;
+}
+
+/* The gallery cells have an empty body cell in the authored content.
+   (Declared after the article-card rules to keep specificity ascending.) */
+.cards-media:not(:has(a)) .cards-media-card-body:empty {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Tablet (>= 600px): 2 columns.
+   --------------------------------------------------------------------------- */
+@media (width >= 600px) {
+  .cards-media > ul {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Desktop (>= 900px): 4 columns, full 128px vertical band.
+   --------------------------------------------------------------------------- */
+@media (width >= 900px) {
+  .cards-media {
+    padding: 128px 0;
+  }
+
+  .cards-media > ul {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
