@@ -159,12 +159,12 @@
   color: rgb(0 0 0);
 }
 
-/* Hover: shrink the shadow (no positional shift, so the button stays put
-   under the pointer and clicks always land). */
+/* Hover: lift the button up-left and grow the offset shadow. */
 .columns-feature.columns-feature-hero p a:any-link:hover,
 .columns-feature p.columns-feature-cta a:any-link:hover {
   text-decoration: none;
-  box-shadow: 2px 2px 0 0 rgb(0 0 0);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 rgb(0 0 0);
 }
 
 /* Press-in only while actively pressed. */
