@@ -1,0 +1,139 @@
+/* Block: hero-overlay -- values extracted from wknd-trendsetters.site/about-us source.
+   rc7 overlay banner: full-bleed BLACK section band containing a rounded image card
+   with a dark bottom-up gradient overlay and white heading/subheading/CTA at lower-left.
+
+   Decorated EDS DOM:
+     .hero-overlay
+       > div (row 1)  > div (cell) > picture > img   -- background image
+       > div (row 2)  > div (cell) > h2 + p + p>a     -- heading, subheading, CTA
+   The two rows are stacked into a single card using a 1-cell grid. */
+
+/* ---------------------------------------------------------------------------
+   Full-bleed black band. The block lives inside the centered .section > div
+   (max-width 1200px); calc(50% - 50vw) breaks it out to the viewport edges.
+   Both rows are placed in the same grid cell so they overlap into one card,
+   constrained to max 1200px and centered inside the band's gutters.
+   --------------------------------------------------------------------------- */
+.hero-overlay {
+  width: auto;
+  margin-inline: calc(50% - 50vw);
+  padding: 64px 24px;
+  background-color: rgb(0 0 0);
+  display: grid;
+  grid-template-columns: minmax(0, 1200px);
+  justify-content: center;
+}
+
+.hero-overlay > div {
+  grid-area: 1 / 1;
+  position: relative;
+  min-height: 448px;
+  border-radius: 20px;
+}
+
+/* --- Row wrappers (single-level child selectors, equal specificity) --- */
+
+/* Image row: rounded, clipped card that holds the cover image. */
+.hero-overlay > div:first-child {
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Text row: overlaid on the image with a dark bottom-up gradient,
+   content pinned to the lower-left. */
+.hero-overlay > div:last-child {
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  padding: 32px;
+  background-image: linear-gradient(to top, rgb(0 0 0 / 70%) 0%, rgb(0 0 0 / 0%) 60%);
+}
+
+/* --- Nested descendants (deeper selectors, declared after the wrappers) --- */
+.hero-overlay > div:first-child > div,
+.hero-overlay > div:first-child picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-overlay > div:first-child img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay > div:last-child > div {
+  max-width: 672px;
+}
+
+/* --- Heading: uppercase Syncopate, white, large --- */
+.hero-overlay h2 {
+  margin: 0;
+  font-family: Syncopate, var(--heading-font-family);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.56px;
+  text-transform: uppercase;
+  color: rgb(255 255 255);
+}
+
+/* --- Subheading --- */
+.hero-overlay p {
+  margin: 16px 0 0;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgb(255 255 255);
+}
+
+/* --- CTA row (the paragraph wrapping the link) --- */
+.hero-overlay p:has(a) {
+  display: flex;
+  margin-top: 32px;
+}
+
+/* --- "See more": inverse/white pill button. Higher specificity than the
+       global a.button rules so it wins whether or not EDS auto-decorates it. --- */
+main .hero-overlay > div:last-child a:any-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 12px 24px;
+  border: 2px solid rgb(255 255 255);
+  border-radius: 9999px;
+  background-color: rgb(255 255 255);
+  color: rgb(0 0 0);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+main .hero-overlay > div:last-child a:any-link:hover {
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+/* ---------------------------------------------------------------------------
+   Desktop (>= 900px): taller band padding, larger card padding and heading.
+   --------------------------------------------------------------------------- */
+@media (width >= 900px) {
+  .hero-overlay {
+    padding: 128px 32px;
+  }
+
+  .hero-overlay > div:last-child {
+    padding: 64px;
+  }
+
+  .hero-overlay h2 {
+    font-size: 56px;
+    letter-spacing: -1.12px;
+  }
+}

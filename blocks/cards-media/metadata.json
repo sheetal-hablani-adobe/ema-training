@@ -1,0 +1,38 @@
+{
+  "variantName": "cards-media",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-09-01T00:00:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://wknd-trendsetters.site/about-us",
+    "originPage": "about-us page",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "grey",
+    "density": "compact",
+    "purpose": "feature",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image grid / image + tag + date + heading cards",
+    "buttonCount": 0,
+    "imageCount": 8
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "image galleries in a uniform grid",
+      "article/blog card grids with image, tag, date, and title",
+      "collections of related media items"
+    ],
+    "notSuitableFor": [
+      "single feature highlights",
+      "text-only card lists"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/about-us"],
+    "reuseCount": 2,
+    "lastUsed": "2026-09-01T00:00:00.000Z"
+  }
+}
