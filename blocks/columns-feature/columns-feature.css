@@ -138,17 +138,17 @@
   justify-content: center;
   margin: 0;
   padding: 12px 24px;
-  border: 2px solid rgb(0 0 0);
+  border: 2px solid var(--color-black);
   border-radius: 9999px;
   font-size: 14px;
   font-weight: 600;
   line-height: 1.25;
   text-decoration: none;
   white-space: nowrap;
-  background-color: rgb(0 0 0);
+  background-color: var(--color-black);
   color: rgb(255 255 255);
-  box-shadow: 4px 4px 0 0 rgb(0 0 0);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: var(--shadow-button);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 /* Secondary CTA -- outlined, only when there is a second link in the hero row
@@ -156,7 +156,7 @@
    single CTA solid while flipping any subsequent one to the outlined style. */
 .columns-feature.columns-feature-hero p a:any-link:not(:first-of-type) {
   background-color: rgb(255 255 255);
-  color: rgb(0 0 0);
+  color: var(--color-black);
 }
 
 /* Hover: lift the button up-left and grow the offset shadow. */
@@ -164,14 +164,14 @@
 .columns-feature p.columns-feature-cta a:any-link:hover {
   text-decoration: none;
   transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 0 rgb(0 0 0);
+  box-shadow: 6px 6px 0 0 var(--color-black);
 }
 
 /* Press-in only while actively pressed. */
 .columns-feature.columns-feature-hero p a:any-link:active,
 .columns-feature p.columns-feature-cta a:any-link:active {
   transform: translate(2px, 2px);
-  box-shadow: 0 0 0 0 rgb(0 0 0);
+  box-shadow: 0 0 0 0 var(--color-black);
 }
 
 /* Image collage: the img-col holds the pictures directly (the JS unwraps any
