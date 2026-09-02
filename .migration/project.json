@@ -7,5 +7,8 @@
       "previewSite": "ema-training",
       "contentHostUrl": "https://content.da.live/sheetal-hablani-adobe/ema-training/"
     }
-  }
+  },
+  "features": [
+    "site-planning"
+  ]
 }

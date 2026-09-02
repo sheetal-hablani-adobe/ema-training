@@ -6,11 +6,11 @@
     {
       "name": "about-us",
       "urls": [
-        "https://wknd-trendsetters.site/about-us"
+        "https://wknd-trendsetters.site/about-us",
+        "https://wknd-trendsetters.site/magazine/article-1"
       ],
       "representativeUrl": "https://wknd-trendsetters.site/about-us",
-      "description": "About-us editorial page: two-column intros, image and article card grids, profile tabs, FAQ accordion, and an overlay hero banner.",
-      "urlPattern": "/*",
+      "description": "To be named in naming step",
       "blocks": [
         {
           "name": "section-rc1",
@@ -65,7 +65,8 @@
             "#main-content > section.section.inverse-section > div.container > div.grid-layout.desktop-1-column"
           ]
         }
-      ]
+      ],
+      "urlPattern": "/*"
     }
   ]
 }
