@@ -2,10 +2,10 @@
   "type": "da",
   "sites": {
     "ema-training": {
+      "libraryUrl": "https://main--sta-boilerplate--aemdemos.aem.page/tools/sidekick/library.json",
       "previewOrg": "sheetal-hablani-adobe",
       "previewSite": "ema-training",
-      "contentHostUrl": "https://content.da.live/sheetal-hablani-adobe/ema-training/",
-      "libraryUrl": "https://main--sta-boilerplate--aemdemos.aem.page/tools/sidekick/library.json"
+      "contentHostUrl": "https://content.da.live/sheetal-hablani-adobe/ema-training/"
     }
   }
 }
