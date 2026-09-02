@@ -1,10 +1,8 @@
 /**
- * Fetch the footer fragment. Metadata-independent dual-fetch:
- * /content first (localhost / aem up), then root (DA/EDS production).
+ * Fetch the footer fragment.
  */
 async function fetchFooter() {
-  let resp = await fetch('/content/footer.plain.html');
-  if (!resp.ok) resp = await fetch('/footer.plain.html');
+  const resp = await fetch('/footer.plain.html');
   if (!resp.ok) return null;
   const html = await resp.text();
   const tmp = document.createElement('div');
