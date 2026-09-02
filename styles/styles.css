@@ -410,3 +410,38 @@ body.blog main > .section > .table-spec-wrapper {
   margin-inline: auto;
 }
 
+/* Blog article-body headings: uppercase Syncopate, matching the source's
+   section headings (same treatment as the article title). Mobile-first sizes
+   scale up at desktop. */
+body.blog main > .section > .default-content-wrapper h2,
+body.blog main > .section > .default-content-wrapper h3 {
+  font-family: Syncopate, var(--heading-font-family);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: rgb(0 0 0);
+}
+
+body.blog main > .section > .default-content-wrapper h2 {
+  margin: 40px 0 16px;
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+body.blog main > .section > .default-content-wrapper h3 {
+  margin: 32px 0 12px;
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+@media (width >= 900px) {
+  body.blog main > .section > .default-content-wrapper h2 {
+    font-size: 40px;
+    line-height: 44px;
+  }
+
+  body.blog main > .section > .default-content-wrapper h3 {
+    font-size: 32px;
+    line-height: 35.2px;
+  }
+}
+
