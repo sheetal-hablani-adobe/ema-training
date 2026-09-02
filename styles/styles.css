@@ -410,6 +410,11 @@ body.blog main > .section > .table-spec-wrapper {
   margin-inline: auto;
 }
 
+/* Extra breathing room between the last article section and the footer. */
+body.blog main > .section:last-child {
+  margin-bottom: 96px;
+}
+
 /* Blog article-body headings: uppercase Syncopate, matching the source's
    section headings (same treatment as the article title). Mobile-first sizes
    scale up at desktop. */
