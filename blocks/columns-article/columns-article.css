@@ -31,14 +31,15 @@
   height: auto;
 }
 
-/* Title: Syncopate uppercase (boilerplate falls back locally). */
+/* Title: Syncopate uppercase (boilerplate falls back locally).
+   Mobile-first: source uses 24px on phones, scaling up to 40px at desktop. */
 .columns-article h1 {
   margin: 0;
   font-family: Syncopate, var(--heading-font-family);
-  font-size: 40px;
+  font-size: 24px;
   font-weight: 700;
-  line-height: 44px;
-  letter-spacing: -0.8px;
+  line-height: 1.1;
+  letter-spacing: -0.48px;
   text-transform: uppercase;
   color: rgb(0 0 0);
 }
@@ -133,5 +134,12 @@
 
   .columns-article > div > .columns-article-img-col {
     order: unset;
+  }
+
+  /* Full-size title on desktop. */
+  .columns-article h1 {
+    font-size: 40px;
+    line-height: 44px;
+    letter-spacing: -0.8px;
   }
 }
