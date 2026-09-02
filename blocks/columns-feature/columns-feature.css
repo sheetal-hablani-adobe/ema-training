@@ -127,6 +127,8 @@
 
 /* Pill CTAs -- links are authored as plain <a>, not EDS .button.
    Source uses a hard offset shadow (4px 4px 0 0 #000) that presses in on hover. */
+/* Primary CTA -- solid black by default (covers a lone CTA like "See trends",
+   which is both :first-of-type and :last-of-type). */
 .columns-feature.columns-feature-hero p a:any-link {
   display: inline-flex;
   align-items: center;
@@ -140,15 +142,10 @@
   line-height: 1.25;
   text-decoration: none;
   white-space: nowrap;
-  box-shadow: 4px 4px 0 0 rgb(0 0 0);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-/* Primary CTA -- solid black by default (covers a lone CTA like "See trends",
-   which is both :first-of-type and :last-of-type). */
-.columns-feature.columns-feature-hero p a:any-link {
   background-color: rgb(0 0 0);
   color: rgb(255 255 255);
+  box-shadow: 4px 4px 0 0 rgb(0 0 0);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 /* Secondary CTA -- outlined, only when there is a second link in the row
