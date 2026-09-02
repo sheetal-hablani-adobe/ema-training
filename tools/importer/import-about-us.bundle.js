@@ -81,19 +81,48 @@ var CustomImportScript = (() => {
 
   // tools/importer/parsers/cards-media.js
   function parse2(element, { document }) {
-    const cardEls = element.querySelectorAll(":scope > *");
+    let cardEls;
+    const trendImages = element.querySelectorAll(".trend-card-image");
+    const directCount = element.querySelectorAll(":scope > *").length;
+    if (trendImages.length > directCount) {
+      cardEls = [];
+      const imageDivs = element.querySelectorAll(".trend-card-image");
+      imageDivs.forEach((imgDiv) => {
+        const wrapper = document.createElement("div");
+        const anchor = imgDiv.closest("a[href]");
+        if (anchor && anchor.getAttribute("href")) {
+          wrapper.setAttribute("data-card-href", anchor.getAttribute("href"));
+        }
+        wrapper.appendChild(imgDiv.cloneNode(true));
+        let sib = imgDiv.nextElementSibling;
+        if (sib && sib.classList.contains("trend-card-body")) {
+          wrapper.appendChild(sib.cloneNode(true));
+        }
+        cardEls.push(wrapper);
+      });
+    } else {
+      cardEls = Array.from(element.querySelectorAll(":scope > *"));
+    }
     const cells = [];
     cardEls.forEach((card) => {
       const img = card.querySelector("img");
       const heading = card.querySelector("h1, h2, h3, h4, h5, h6");
       let textCell = "";
       if (heading) {
-        const href = card.tagName === "A" ? card.getAttribute("href") : card.querySelector("a") && card.querySelector("a").getAttribute("href");
+        const href = card.tagName === "A" ? card.getAttribute("href") : (card.getAttribute("data-card-href") || (card.querySelector("a") && card.querySelector("a").getAttribute("href")));
         const parts = [];
-        const meta = card.querySelector(".article-card-meta") || card;
-        const metaSpans = Array.from(meta.querySelectorAll("span")).filter((s) => s.textContent.trim().length > 0);
-        const tagText = metaSpans[0] ? metaSpans[0].textContent.trim() : "";
-        const dateText = metaSpans[1] ? metaSpans[1].textContent.trim() : "";
+        const meta = card.querySelector(".article-card-meta");
+        let tagText = "";
+        let dateText = "";
+        if (meta) {
+          const metaSpans = Array.from(meta.querySelectorAll("span")).filter((s) => s.textContent.trim().length > 0);
+          tagText = metaSpans[0] ? metaSpans[0].textContent.trim() : "";
+          dateText = metaSpans[1] ? metaSpans[1].textContent.trim() : "";
+        } else {
+          const body = heading.parentElement || card;
+          const labelEl = Array.from(body.children).find((el) => el !== heading && !el.querySelector("img") && !/^H[1-6]$/.test(el.tagName) && el.textContent.trim().length > 0 && el.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING);
+          if (labelEl) tagText = labelEl.textContent.trim();
+        }
         if (tagText) {
           const tagP = document.createElement("p");
           tagP.textContent = tagText;
@@ -115,6 +144,11 @@ var CustomImportScript = (() => {
           titleEl.textContent = titleText;
         }
         parts.push(titleEl);
+        Array.from(card.querySelectorAll("p")).filter((p) => p.textContent.trim().length > 0 && heading.compareDocumentPosition(p) & Node.DOCUMENT_POSITION_FOLLOWING).forEach((p) => {
+          const descP = document.createElement("p");
+          descP.textContent = p.textContent.trim();
+          parts.push(descP);
+        });
         textCell = parts;
       } else {
         const textParts = Array.from(
@@ -265,14 +299,16 @@ var CustomImportScript = (() => {
         name: "columns-feature",
         instances: [
           "#main-content > header.section.secondary-section > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl",
-          "#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.tablet-1-column.grid-gap-lg"
+          "#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.tablet-1-column.grid-gap-lg",
+          "#main-content div.grid-layout.tablet-1-column.grid-gap-lg"
         ]
       },
       {
         name: "cards-media",
         instances: [
           "#main-content > section.section.secondary-section:nth-of-type(2) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-sm",
-          "#main-content > section.section.secondary-section:nth-of-type(4) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md"
+          "#main-content > section.section.secondary-section:nth-of-type(4) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md",
+          "#main-content div.grid-layout.desktop-4-column.grid-gap-md"
         ]
       },
       {
