@@ -1,0 +1,156 @@
+/* Block: columns-article -- the blog article header.
+   Values extracted from wknd-trendsetters.site/blog/ace-pro-court-polo source. */
+
+/* ---------------------------------------------------------------------------
+   Base (mobile-first): single-column stack, cover image above the text.
+   --------------------------------------------------------------------------- */
+
+/* Top breathing room between the site header and the cover image, matching the
+   source's article-header section padding (64px mobile, 128px desktop). */
+.columns-article {
+  padding-top: 64px;
+}
+
+.columns-article > div {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.columns-article img {
+  width: 100%;
+  display: block;
+}
+
+.columns-article > div > div {
+  order: 1;
+}
+
+.columns-article > div > .columns-article-img-col {
+  order: 0;
+}
+
+/* Cover image: rounded corners, 3:2 aspect, cropped to fill. */
+.columns-article > div > .columns-article-img-col img {
+  border-radius: 20px;
+  object-fit: cover;
+  aspect-ratio: 3 / 2;
+  height: auto;
+}
+
+/* Title: Syncopate uppercase (boilerplate falls back locally).
+   Mobile-first: source uses 24px on phones, scaling up to 40px at desktop. */
+.columns-article h1 {
+  margin: 0;
+  font-family: Syncopate, var(--heading-font-family);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.48px;
+  text-transform: uppercase;
+  color: rgb(0 0 0);
+}
+
+/* Breadcrumbs: inline links with a chevron between crumbs. The source's inline
+   separator SVG is dropped on import, so recreate it with a CSS ::before chevron
+   on every crumb after the first. */
+.columns-article .columns-article-breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 32px;
+  font-size: 16px;
+}
+
+.columns-article .columns-article-breadcrumbs a:any-link {
+  font-weight: 500;
+  text-decoration: none;
+  color: rgb(0 0 0);
+}
+
+.columns-article .columns-article-breadcrumbs a:hover {
+  color: rgb(0 0 0);
+}
+
+/* Crumbs after the first render grey. */
+.columns-article .columns-article-breadcrumbs a + a:any-link {
+  color: rgb(102 102 102);
+}
+
+.columns-article .columns-article-breadcrumbs a + a::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-right: 2px solid rgb(153 153 153);
+  border-bottom: 2px solid rgb(153 153 153);
+  transform: rotate(-45deg);
+  vertical-align: middle;
+}
+
+/* Byline ("By Taylor Brooks"): small black text. */
+.columns-article .columns-article-byline {
+  margin: 16px 0 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgb(0 0 0);
+}
+
+/* Meta ("February 23, 2026 • 4 min read"): small grey text. */
+.columns-article .columns-article-meta {
+  margin: 8px 0 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgb(102 102 102);
+}
+
+/* Category tag: lime pill, uppercase. */
+.columns-article .columns-article-tag {
+  display: inline-flex;
+  align-items: center;
+  margin: 16px 0 0;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background-color: rgb(244 254 139);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: rgb(0 0 0);
+}
+
+/* ---------------------------------------------------------------------------
+   Desktop (>= 900px): two equal columns, vertically centered, 24px gap.
+   --------------------------------------------------------------------------- */
+@media (width >= 900px) {
+  .columns-article {
+    padding-top: 128px;
+  }
+
+  .columns-article > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .columns-article > div > div {
+    order: unset;
+  }
+
+  .columns-article > div > .columns-article-img-col {
+    order: unset;
+  }
+
+  /* Full-size title on desktop. */
+  .columns-article h1 {
+    font-size: 40px;
+    line-height: 44px;
+    letter-spacing: -0.8px;
+  }
+}

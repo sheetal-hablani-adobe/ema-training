@@ -6,11 +6,11 @@
     {
       "name": "about-us",
       "urls": [
-        "https://wknd-trendsetters.site/about-us"
+        "https://wknd-trendsetters.site/about-us",
+        "https://wknd-trendsetters.site/magazine/article-1"
       ],
       "representativeUrl": "https://wknd-trendsetters.site/about-us",
-      "description": "About-us editorial page: two-column intros, image and article card grids, profile tabs, FAQ accordion, and an overlay hero banner.",
-      "urlPattern": "/*",
+      "description": "To be named in naming step",
       "blocks": [
         {
           "name": "section-rc1",
@@ -65,7 +65,31 @@
             "#main-content > section.section.inverse-section > div.container > div.grid-layout.desktop-1-column"
           ]
         }
-      ]
+      ],
+      "urlPattern": "/*"
+    },
+    {
+      "name": "blog",
+      "urls": [
+        "https://wknd-trendsetters.site/blog/ace-pro-court-polo"
+      ],
+      "representativeUrl": "https://wknd-trendsetters.site/blog/ace-pro-court-polo",
+      "description": "Blog article page: two-column article header (cover image + title/byline/meta/tag) and a long-form article body with an embedded spec table.",
+      "blocks": [
+        {
+          "name": "columns-article",
+          "instances": [
+            "#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.tablet-1-column.grid-gap-lg"
+          ]
+        },
+        {
+          "name": "table-spec",
+          "instances": [
+            "#main-content > section.section:nth-of-type(2) table"
+          ]
+        }
+      ],
+      "urlPattern": "/blog/*"
     }
   ]
 }
