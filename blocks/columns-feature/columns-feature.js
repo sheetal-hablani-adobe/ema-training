@@ -18,6 +18,19 @@ export default function decorate(block) {
     // other copy is either a breadcrumb trail (2+ links) or a single CTA link.
     // Tag each so CSS can style them without :has() (breadcrumb chevrons; solid
     // pill CTA). The source's inline separator SVG is dropped on import.
+
+    // Split-feature promo variant: a text column whose FIRST content element is a
+    // heading (image + heading + copy + single CTA), as opposed to the article
+    // intro / featured banner whose text column leads with a breadcrumb/meta
+    // paragraph. Tag it so its copy can be centered without touching those. The
+    // text column is the block cell that carries the heading.
+    const headingCol = [...block.querySelectorAll(':scope > div > div')]
+      .find((col) => {
+        const first = col.querySelector('h1, h2, h3, h4, h5, h6, p');
+        return first && /^H[1-6]$/.test(first.tagName);
+      });
+    if (headingCol) headingCol.classList.add('columns-feature-promo');
+
     [...block.querySelectorAll('p')].forEach((p) => {
       const links = p.querySelectorAll(':scope > a');
       const textOutsideLinks = [...p.childNodes]

@@ -34,6 +34,14 @@
   color: rgb(0 0 0);
 }
 
+/* Split-feature promo text column (image + heading + copy + single CTA): centre
+   its heading, copy, and CTA. Tagged by the block JS (columns-feature-promo) so
+   this never affects the article-intro / featured-banner text columns, which
+   lead with a breadcrumb/meta line and stay left-aligned. */
+.columns-feature .columns-feature-promo {
+  text-align: center;
+}
+
 /* rc2 article-intro breadcrumbs: inline links with a chevron between crumbs.
    The source's separator was an inline SVG stripped on import, so recreate it
    with a CSS ::before chevron on every crumb after the first. */
@@ -124,6 +132,12 @@
   flex-wrap: wrap;
   gap: 16px;
   margin-top: 32px;
+}
+
+/* Centre the CTA within the split-feature promo column (see the promo rule
+   above). Placed after the CTA row's flex declaration so specificity ascends. */
+.columns-feature .columns-feature-promo p.columns-feature-cta {
+  justify-content: center;
 }
 
 /* Pill CTAs -- links are authored as plain <a>, not EDS .button.
