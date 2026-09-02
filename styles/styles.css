@@ -339,7 +339,10 @@ main .section.highlight {
    introduces a following block. */
 main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) h2,
 main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) h2 {
-  margin: 0;
+  /* margin-block 0, but keep the auto inline margins from the `> *` rule so the
+     max-width:1200px box stays centred in the full-bleed band (a `margin: 0`
+     shorthand here would reset those and pin the heading to the left). */
+  margin-block: 0;
   font-family: Syncopate, var(--heading-font-family);
   font-weight: 700;
   text-transform: uppercase;
@@ -348,7 +351,8 @@ main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) h2 {
 
 main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) h2 + p,
 main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) h2 + p {
-  margin: 8px 0 0;
+  /* Same reasoning: set block margins only, preserve inline auto centring. */
+  margin-block: 8px 0;
   font-size: 18px;
   color: rgb(102 102 102);
 }
