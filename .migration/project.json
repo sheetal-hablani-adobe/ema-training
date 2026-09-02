@@ -1,0 +1,9 @@
+{
+  "sites": {
+    "ema-training": {
+      "previewOrg": "sheetal-hablani-adobe",
+      "previewSite": "ema-training",
+      "contentHostUrl": "https://content.da.live/sheetal-hablani-adobe/ema-training/"
+    }
+  }
+}
