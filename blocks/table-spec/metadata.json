@@ -1,0 +1,38 @@
+{
+  "variantName": "table-spec",
+  "baseBlock": "table",
+  "version": "1.0.0",
+  "created": "2026-09-02T00:00:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://wknd-trendsetters.site/blog/ace-pro-court-polo",
+    "originPage": "blog article page",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "compact",
+    "purpose": "spec-table",
+    "imagePattern": "noimg"
+  },
+  "contentPattern": {
+    "structure": "header row (Spec | Detail) + key/value data rows",
+    "buttonCount": 0,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "product spec / detail tables inside article body",
+      "two-column key/value tabular data",
+      "comparison tables with a header row"
+    ],
+    "notSuitableFor": [
+      "card grids or repeating media items",
+      "side-by-side text/image layouts (use columns)"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/blog/ace-pro-court-polo"],
+    "reuseCount": 1,
+    "lastUsed": "2026-09-02T00:00:00.000Z"
+  }
+}

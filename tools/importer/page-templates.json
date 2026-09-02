@@ -67,6 +67,29 @@
         }
       ],
       "urlPattern": "/*"
+    },
+    {
+      "name": "blog",
+      "urls": [
+        "https://wknd-trendsetters.site/blog/ace-pro-court-polo"
+      ],
+      "representativeUrl": "https://wknd-trendsetters.site/blog/ace-pro-court-polo",
+      "description": "Blog article page: two-column article header (cover image + title/byline/meta/tag) and a long-form article body with an embedded spec table.",
+      "blocks": [
+        {
+          "name": "columns-article",
+          "instances": [
+            "#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.tablet-1-column.grid-gap-lg"
+          ]
+        },
+        {
+          "name": "table-spec",
+          "instances": [
+            "#main-content > section.section:nth-of-type(2) table"
+          ]
+        }
+      ],
+      "urlPattern": "/blog/*"
     }
   ]
 }

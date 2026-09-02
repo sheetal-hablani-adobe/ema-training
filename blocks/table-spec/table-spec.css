@@ -1,0 +1,72 @@
+/*
+ * Table Spec block
+ * Visual design matched to source spec/comparison table
+ * (wknd-trendsetters ace-pro-court-polo blog article).
+ *
+ * Source is a browser-default table dropped into the article body:
+ * - auto width (shrinks to content, NOT full width)
+ * - no borders, no backgrounds, no zebra striping, no rounded corners
+ * - default separate borders (border-spacing: 2px), zero cell padding
+ * - header cells: bold, centered; body cells: normal weight, left-aligned
+ * - 16px text, line-height 1.6, --text-color, middle vertical alignment
+ * - first body cell carries a bold <strong> spec label
+ */
+
+.table-spec.block {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table-spec.block table {
+  width: auto;
+  max-width: 100%;
+  border-collapse: separate;
+  border-spacing: 2px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-color);
+}
+
+.table-spec.block th,
+.table-spec.block td {
+  padding: 0;
+  vertical-align: middle;
+}
+
+.table-spec.block th {
+  font-weight: 700;
+  text-align: center;
+}
+
+.table-spec.block td {
+  font-weight: 400;
+  text-align: left;
+}
+
+/* EDS wraps each cell's content in <p>; strip its margins so cells match
+   the source (which has bare text, no paragraph spacing). */
+.table-spec.block th p,
+.table-spec.block td p {
+  margin: 0;
+}
+
+.table-spec.block td p + p {
+  margin-top: 0.25em;
+}
+
+/* striped variant */
+.table-spec.block.striped tbody tr:nth-child(odd) {
+  background-color: var(--light-color);
+}
+
+/* bordered variant */
+.table-spec.block.bordered table th,
+.table-spec.block.bordered table td {
+  border: 1px solid var(--dark-color);
+  padding: 0.5em;
+}
+
+/* no-header variant: all rows are body rows */
+.table-spec.block.no-header table tbody tr:first-child td {
+  font-weight: 400;
+}
