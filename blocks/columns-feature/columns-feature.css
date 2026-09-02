@@ -144,14 +144,17 @@
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* "See case" -- solid black */
-.columns-feature.columns-feature-hero p a:any-link:first-of-type {
+/* Primary CTA -- solid black by default (covers a lone CTA like "See trends",
+   which is both :first-of-type and :last-of-type). */
+.columns-feature.columns-feature-hero p a:any-link {
   background-color: rgb(0 0 0);
   color: rgb(255 255 255);
 }
 
-/* "All stories" -- outlined / secondary */
-.columns-feature.columns-feature-hero p a:any-link:last-of-type {
+/* Secondary CTA -- outlined, only when there is a second link in the row
+   (e.g. about-us "All stories" after "See case"). :not(:first-of-type) keeps a
+   single CTA solid while flipping any subsequent one to the outlined style. */
+.columns-feature.columns-feature-hero p a:any-link:not(:first-of-type) {
   background-color: rgb(255 255 255);
   color: rgb(0 0 0);
 }
