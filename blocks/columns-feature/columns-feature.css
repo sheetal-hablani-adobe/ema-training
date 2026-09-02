@@ -126,8 +126,8 @@
 }
 
 /* Pill CTAs -- links are authored as plain <a>, not EDS .button.
-   Source uses a hard offset shadow (4px 4px 0 0 #000) that presses in on hover. */
-/* Primary CTA -- solid black by default (covers a lone CTA like "See trends",
+   Source uses a hard offset shadow (4px 4px 0 0 #000) that presses in on hover.
+   Primary CTA is solid black by default (covers a lone CTA like "See trends",
    which is both :first-of-type and :last-of-type). */
 .columns-feature.columns-feature-hero p a:any-link {
   display: inline-flex;
