@@ -10,6 +10,14 @@ async function fetchNav() {
   const html = await resp.text();
   const tmp = document.createElement('div');
   tmp.innerHTML = html;
+  // Normalize: the DA/EDS markdown pipeline wraps each <li>'s leading content
+  // in a <p> (e.g. `<li><p>Trends</p><ul>` and `<li><p><a>About</a></p>`),
+  // whereas the raw fragment served on localhost keeps it as bare text/links
+  // (`<li>Trends<ul>`). Unwrap those <p> wrappers so both forms produce the
+  // same structure the label/link extraction below expects.
+  tmp.querySelectorAll('li > p').forEach((p) => {
+    p.replaceWith(...p.childNodes);
+  });
   return tmp;
 }
 
@@ -27,6 +35,21 @@ function itemIcon() {
   span.className = 'nav-item-icon';
   span.innerHTML = '<svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 4a12 12 0 1 0 12 12A12 12 0 0 0 16 4Zm0 22a10 10 0 1 1 10-10 10 10 0 0 1-10 10Z"/><path d="M16 10a6 6 0 1 0 6 6 6 6 0 0 0-6-6Zm0 10a4 4 0 1 1 4-4 4 4 0 0 1-4 4Z"/></svg>';
   return span;
+}
+
+/**
+ * Read a list item's own label — the text that belongs to the <li> itself,
+ * excluding any nested <ul> (its submenu) and ignoring surrounding whitespace.
+ * Works whether the leading content is bare text (`<li>Trends<ul>`) or was
+ * wrapped in a <p> by the DA/EDS pipeline (`<li><p>Trends</p><ul>`).
+ */
+function ownLabel(li) {
+  let text = '';
+  li.childNodes.forEach((node) => {
+    if (node.nodeName === 'UL') return; // skip the submenu
+    text += node.textContent;
+  });
+  return text.trim();
 }
 
 /**
@@ -54,7 +77,7 @@ function buildMegaPanel(topLi) {
       const col = document.createElement('div');
       col.className = 'nav-mega-col';
       const heading = document.createElement('h3');
-      heading.textContent = groupLi.childNodes[0].textContent.trim();
+      heading.textContent = ownLabel(groupLi);
       col.append(heading);
       const list = document.createElement('ul');
       [...groupList.children].forEach((itemLi) => {
@@ -168,7 +191,7 @@ export default async function decorate(block) {
     [...topUl.children].forEach((topLi) => {
       const item = document.createElement('li');
       item.className = 'nav-item';
-      const label = topLi.childNodes[0].textContent.trim();
+      const label = ownLabel(topLi);
       const directLink = topLi.querySelector(':scope > a');
       const hasPanel = !!topLi.querySelector(':scope > ul');
 
