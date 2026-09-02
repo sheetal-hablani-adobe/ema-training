@@ -484,3 +484,34 @@ body.blog main > .section > .default-content-wrapper blockquote p {
   color: rgb(64 64 64);
 }
 
+/* ---------------------------------------------------------------------------
+   Trailing "Subscribe" CTA band. The source ends the page with a full-bleed
+   lime (accent) band — a centered heading + text + button. In our import this
+   is the section's last default-content-wrapper holding a button link. Pull it
+   out to the viewport edges (the boilerplate centers .section > div to 1200px,
+   so explicit negative inline margins break it full-bleed) and center it.
+   Scoped to :last-child + :has(button link) so it never touches the blog
+   article body or the about-us page (both verified 0 matches).
+   --------------------------------------------------------------------------- */
+body:not(.blog) main > .section > .default-content-wrapper:last-child:has(> p a) {
+  width: auto;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: 64px 0;
+  background-color: rgb(244 254 139);
+  text-align: center;
+}
+
+body:not(.blog) main > .section > .default-content-wrapper:last-child:has(> p a) > * {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+@media (width >= 900px) {
+  body:not(.blog) main > .section > .default-content-wrapper:last-child:has(> p a) {
+    padding: 128px 0;
+  }
+}
+
