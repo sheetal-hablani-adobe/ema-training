@@ -4,6 +4,13 @@
 /* ---------------------------------------------------------------------------
    Base (mobile-first): single-column stack, cover image above the text.
    --------------------------------------------------------------------------- */
+
+/* Top breathing room between the site header and the cover image, matching the
+   source's article-header section padding (64px mobile, 128px desktop). */
+.columns-article {
+  padding-top: 64px;
+}
+
 .columns-article > div {
   display: flex;
   flex-direction: column;
@@ -121,6 +128,10 @@
    Desktop (>= 900px): two equal columns, vertically centered, 24px gap.
    --------------------------------------------------------------------------- */
 @media (width >= 900px) {
+  .columns-article {
+    padding-top: 128px;
+  }
+
   .columns-article > div {
     display: grid;
     grid-template-columns: 1fr 1fr;
