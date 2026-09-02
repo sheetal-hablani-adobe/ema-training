@@ -445,3 +445,37 @@ body.blog main > .section > .default-content-wrapper h3 {
   }
 }
 
+/* Blog article-body prose: match the source's reading text — 16px black,
+   1.7 line-height, generous paragraph spacing. */
+body.blog main > .section > .default-content-wrapper p,
+body.blog main > .section > .default-content-wrapper li {
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgb(0 0 0);
+}
+
+body.blog main > .section > .default-content-wrapper p {
+  margin: 0 0 20px;
+}
+
+body.blog main > .section > .default-content-wrapper ul {
+  margin: 0 0 20px;
+  padding-left: 24px;
+}
+
+body.blog main > .section > .default-content-wrapper li {
+  margin: 0 0 8px;
+}
+
+/* Blockquote: lime accent left-border, italic, muted text — matching source. */
+body.blog main > .section > .default-content-wrapper blockquote {
+  margin: 32px 0;
+  padding: 0 0 0 24px;
+  border-left: 4px solid rgb(244 254 139);
+  font-style: italic;
+}
+
+body.blog main > .section > .default-content-wrapper blockquote p {
+  color: rgb(64 64 64);
+}
+
