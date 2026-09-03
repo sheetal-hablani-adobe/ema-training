@@ -362,15 +362,23 @@ main > .section.accent > .default-content-wrapper {
   text-align: center;
 }
 
-@media (width >= 900px) {
-  main:has(> .section.grey, > .section.accent) > .section {
-    padding: 128px 0;
-  }
+/* Standalone band headings (e.g. the grey "Young style, real stories" intro):
+   uppercase Syncopate, matching the source's section-heading treatment. */
+main > .section.grey > .default-content-wrapper h1,
+main > .section.grey > .default-content-wrapper h2,
+main > .section.grey > .default-content-wrapper h3,
+main > .section.accent > .default-content-wrapper h1,
+main > .section.accent > .default-content-wrapper h2,
+main > .section.accent > .default-content-wrapper h3 {
+  font-family: Syncopate, var(--heading-font-family);
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
 @media (width >= 900px) {
   main:has(> .section.grey, > .section.accent) > .section {
-    padding: 88px 0;
+    padding: 128px 0;
   }
 }
 
