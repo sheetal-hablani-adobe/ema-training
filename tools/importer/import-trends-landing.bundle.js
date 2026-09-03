@@ -306,6 +306,15 @@ var CustomImportScript = (() => {
       const { document: document2, url, html, params } = payload;
       const main = document2.body;
       executeTransformers("beforeTransform", main, payload);
+      const heroButtonGroup = document2.querySelector(
+        "#main-content > header.section.secondary-section .button-group"
+      );
+      if (heroButtonGroup) {
+        const heroLinks = heroButtonGroup.querySelectorAll(":scope > a");
+        heroLinks.forEach((a, i) => {
+          if (i > 0) a.remove();
+        });
+      }
       const pageBlocks = findBlocksOnPage(document2, PAGE_TEMPLATE);
       pageBlocks.forEach((block) => {
         if (!block.element.parentNode) return;

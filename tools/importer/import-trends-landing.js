@@ -113,6 +113,20 @@ export default {
     // 1. Execute beforeTransform transformers (initial cleanup)
     executeTransformers('beforeTransform', main, payload);
 
+    // 1b. Page-specific: the hero on this page should show only its primary CTA
+    // ("See trends"). The source hero also carries a secondary "Explore the blog"
+    // link, which we drop here (scoped to the hero header's button group so the
+    // shared columns-feature parser and other pages are unaffected). Done before
+    // block parsing so the parser only ever sees the single CTA. Idempotent:
+    // keeps just the first anchor, so re-imports stay stable.
+    const heroButtonGroup = document.querySelector(
+      '#main-content > header.section.secondary-section .button-group',
+    );
+    if (heroButtonGroup) {
+      const heroLinks = heroButtonGroup.querySelectorAll(':scope > a');
+      heroLinks.forEach((a, i) => { if (i > 0) a.remove(); });
+    }
+
     // 2. Find blocks on page using embedded template
     const pageBlocks = findBlocksOnPage(document, PAGE_TEMPLATE);
 
