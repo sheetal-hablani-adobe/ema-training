@@ -1,17 +1,8 @@
 {
-  "status": "success",
+  "status": "failed",
   "url": "https://wknd-trendsetters.site/",
   "path": "index",
-  "timestamp": "2026-09-03T06:26:41.066Z",
-  "title": "WKND Trendsetters - Fresh Looks, Bold Stories, Real Life",
-  "template": "about-us",
-  "blocks": [
-    "columns-feature",
-    "columns-feature",
-    "cards-media",
-    "cards-media",
-    "tabs-profile",
-    "accordion-faq",
-    "hero-overlay"
-  ]
+  "timestamp": "2026-09-03T08:29:57.137Z",
+  "error": "CustomImportScript.default not found after 10s. The bundled script may not have loaded correctly. Check browser console for errors.",
+  "errorStack": "Error: CustomImportScript.default not found after 10s. The bundled script may not have loaded correctly. Check browser console for errors.\n    at processUrl (file:///home/node/.excat-marketplaces/excat-marketplace/excat/skills/excat-content-import/scripts/run-bulk-import.js:662:13)\n    at async main (file:///home/node/.excat-marketplaces/excat-marketplace/excat/skills/excat-content-import/scripts/run-bulk-import.js:954:22)"
 }

@@ -41,46 +41,8 @@ var CustomImportScript = (() => {
     default: () => import_about_us_default
   });
 
-  // tools/importer/parsers/accordion-faq.js
-  function parse(element, { document }) {
-    const items = element.querySelectorAll("details.faq-item, details, .faq-item");
-    const cells = [];
-    items.forEach((item) => {
-      const summary = item.querySelector("summary.faq-question, summary");
-      let titleCell;
-      const titleSpan = summary ? summary.querySelector("span") : null;
-      if (titleSpan) {
-        titleCell = titleSpan.textContent.trim();
-      } else if (summary) {
-        titleCell = summary.textContent.trim();
-      } else {
-        titleCell = "";
-      }
-      const answer = item.querySelector(".faq-answer, .faq-content");
-      let contentCell;
-      if (answer) {
-        const nodes = Array.from(answer.childNodes).filter((n) => {
-          if (n.nodeType === 3) return n.textContent.trim().length > 0;
-          return true;
-        });
-        contentCell = nodes.length ? nodes : answer;
-      } else {
-        contentCell = "";
-      }
-      if (titleCell || contentCell && contentCell !== "") {
-        cells.push([titleCell, contentCell]);
-      }
-    });
-    if (!cells.length) {
-      element.replaceWith(...element.childNodes);
-      return;
-    }
-    const block = WebImporter.Blocks.createBlock(document, { name: "accordion-faq", cells });
-    element.replaceWith(block);
-  }
-
   // tools/importer/parsers/cards-media.js
-  function parse2(element, { document }) {
+  function parse(element, { document }) {
     let cardEls;
     const trendImages = element.querySelectorAll(".trend-card-image");
     const directCount = element.querySelectorAll(":scope > *").length;
@@ -189,7 +151,7 @@ var CustomImportScript = (() => {
     col.textContent = "";
     while (wrapper.firstChild) col.appendChild(wrapper.firstChild);
   }
-  function parse3(element, { document }) {
+  function parse2(element, { document }) {
     const columnEls = Array.from(element.querySelectorAll(":scope > div")).filter((col) => col.textContent.trim().length > 0 || col.querySelector("img, picture, a"));
     if (!columnEls.length) {
       element.replaceWith(...element.childNodes);
@@ -201,6 +163,55 @@ var CustomImportScript = (() => {
     const cells = [];
     cells.push(columnEls.map((col) => col));
     const block = WebImporter.Blocks.createBlock(document, { name: "columns-feature", cells });
+    element.replaceWith(block);
+  }
+
+  // tools/importer/parsers/faq-columns.js
+  function parse3(element, { document }) {
+    const cells = [];
+    const introSource = Array.from(element.children).find(
+      (child) => !child.classList.contains("faq-list") && child.querySelector("h1, h2, h3, h4, h5, h6")
+    );
+    const introNodes = [];
+    if (introSource) {
+      const heading = introSource.querySelector("h1, h2, h3, h4, h5, h6");
+      if (heading) introNodes.push(heading);
+      introSource.querySelectorAll("p").forEach((p) => {
+        if (p.textContent.trim()) introNodes.push(p);
+      });
+    }
+    if (introNodes.length) {
+      cells.push([introNodes]);
+    }
+    const faqList = element.querySelector(".faq-list") || element;
+    const items = faqList.querySelectorAll("details.faq-item, details, .faq-item");
+    items.forEach((item) => {
+      const summary = item.querySelector("summary.faq-question, summary");
+      let titleCell = "";
+      const titleSpan = summary ? summary.querySelector("span") : null;
+      if (titleSpan) {
+        titleCell = titleSpan.textContent.trim();
+      } else if (summary) {
+        titleCell = summary.textContent.trim();
+      }
+      const answer = item.querySelector(".faq-answer, .faq-content");
+      let contentCell = "";
+      if (answer) {
+        const nodes = Array.from(answer.childNodes).filter((n) => {
+          if (n.nodeType === 3) return n.textContent.trim().length > 0;
+          return true;
+        });
+        contentCell = nodes.length ? nodes : answer;
+      }
+      if (titleCell || contentCell && contentCell !== "") {
+        cells.push([titleCell, contentCell]);
+      }
+    });
+    if (!cells.length) {
+      element.replaceWith(...element.childNodes);
+      return;
+    }
+    const block = WebImporter.Blocks.createBlock(document, { name: "faq-columns", cells });
     element.replaceWith(block);
   }
 
@@ -279,9 +290,9 @@ var CustomImportScript = (() => {
 
   // tools/importer/import-about-us.js
   var parsers = {
-    "accordion-faq": parse,
-    "cards-media": parse2,
-    "columns-feature": parse3,
+    "cards-media": parse,
+    "columns-feature": parse2,
+    "faq-columns": parse3,
     "hero-overlay": parse4,
     "tabs-profile": parse5
   };
@@ -318,9 +329,13 @@ var CustomImportScript = (() => {
         ]
       },
       {
-        name: "accordion-faq",
+        name: "faq-columns",
         instances: [
-          "#main-content > section.section:nth-of-type(5) div.faq-list"
+          // Primary: the FAQ grid (heading + subheading cell + div.faq-list cell).
+          "#main-content > section.section:nth-of-type(5) > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl",
+          // Class-based fallback: any grid that actually contains a faq-list, so it
+          // never accidentally matches the header/intro grids of the same class.
+          "#main-content div.grid-layout.tablet-1-column.grid-gap-xxl:has(div.faq-list)"
         ]
       },
       {

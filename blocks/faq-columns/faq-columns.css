@@ -1,0 +1,116 @@
+/*
+ * FAQ Columns Block
+ * Left column = intro (heading + subheading); right column = accordion.
+ * The grid lives INSIDE the block, which itself sits inside the normal
+ * centered section column (main > .section > div, max-width 1200px). All
+ * track sizing is relative (1fr), never viewport-relative, so the block can
+ * never overflow the viewport. Below 900px the two columns stack.
+ */
+
+.faq-columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/* Intro (left column on desktop) */
+.faq-columns .faq-columns-intro h2 {
+  margin: 0;
+  font-family: Syncopate, var(--heading-font-family);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.2;
+  font-size: 32px;
+}
+
+.faq-columns .faq-columns-intro p {
+  margin: 8px 0 0;
+  font-size: 18px;
+  color: rgb(102 102 102);
+  line-height: 1.6;
+}
+
+/* Accordion list (right column on desktop) */
+.faq-columns .faq-columns-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.faq-columns .faq-columns-item {
+  border: 1px solid rgb(232 232 232);
+  border-radius: 16px;
+  background-color: transparent;
+}
+
+.faq-columns .faq-columns-item-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px 32px;
+  cursor: pointer;
+  list-style: none;
+  color: rgb(0 0 0);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.6;
+  transition: background-color 0.15s;
+}
+
+.faq-columns .faq-columns-item-label:hover {
+  background-color: rgb(245 245 245);
+}
+
+.faq-columns .faq-columns-item-label::-webkit-details-marker {
+  display: none;
+}
+
+.faq-columns .faq-columns-item-label p {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: rgb(0 0 0);
+}
+
+/* Plus icon (rotates to an x when open) */
+.faq-columns .faq-columns-item-label::after {
+  content: '';
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  background:
+    linear-gradient(currentcolor, currentcolor) center / 100% 2px no-repeat,
+    linear-gradient(currentcolor, currentcolor) center / 2px 100% no-repeat;
+  transition: transform 0.3s;
+}
+
+.faq-columns .faq-columns-item[open] .faq-columns-item-label::after {
+  transform: rotate(45deg);
+}
+
+.faq-columns .faq-columns-item-body {
+  padding: 0 32px 32px;
+}
+
+.faq-columns .faq-columns-item-body p {
+  margin: 0;
+  color: rgb(64 64 64);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+/* Desktop: two columns side-by-side within the centered 1200px column. */
+@media (width >= 900px) {
+  .faq-columns {
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+  }
+
+  .faq-columns .faq-columns-intro h2 {
+    font-size: 40px;
+  }
+}
