@@ -5,15 +5,24 @@
    Instance selector: articles match :has(a); gallery matches :not(:has(a)). */
 
 /* ---------------------------------------------------------------------------
-   Shared grey full-bleed band. The block lives inside the centered
-   .section > div (max-width 1200px). calc(50% - 50vw) breaks the grey
-   background out to the viewport edges; the inner <ul> is re-centered.
+   Base: the card grid sits in the normal centered column. NO background here —
+   the band colour comes from the section wrapper (real .section.grey/.accent
+   bands, or the legacy faked band on non-banded pages below).
    --------------------------------------------------------------------------- */
 .cards-media {
+  padding: 64px 0;
+}
+
+/* LEGACY faked grey band — ONLY on pages WITHOUT real Section Metadata bands
+   (about-us, casual-sport, homepage, case-studies). Those pages import as one
+   EDS section, so the block itself becomes the full-bleed grey band: break out
+   to the viewport edges and paint grey. On real-banded pages this must NOT
+   apply — the section already supplies the background, and a self-grey block
+   would bleed onto white sections. */
+main:not(:has(> .section.grey, > .section.accent)) .cards-media {
   width: auto;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  padding: 64px 0;
   background-color: rgb(245 245 245);
 }
 

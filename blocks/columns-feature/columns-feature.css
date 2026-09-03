@@ -80,14 +80,20 @@
    large uppercase heading, subheading, pill CTAs and a 2-up image collage.
    =========================================================================== */
 
-/* Full-width grey band. The block lives inside the centered .section > div
-   (max-width 1200px), so calc(50% - 50vw) breaks it out to the viewport edges
-   regardless of the section padding. */
+/* Hero vertical rhythm. NO background here — the grey comes from the section
+   wrapper (real .section.grey band, or the legacy faked band below). */
 .columns-feature.columns-feature-hero {
+  padding: 64px 0;
+}
+
+/* LEGACY faked grey band — ONLY on pages WITHOUT real Section Metadata bands
+   (about-us, casual-sport, homepage, case-studies). There the hero block itself
+   becomes the full-bleed grey band. On real-banded pages the .section.grey
+   wrapper supplies the background, so this full-bleed pull-out must not apply. */
+main:not(:has(> .section.grey, > .section.accent)) .columns-feature.columns-feature-hero {
   width: auto;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  padding: 64px 0;
   background-color: rgb(245 245 245);
 }
 
