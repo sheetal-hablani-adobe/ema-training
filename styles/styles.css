@@ -465,8 +465,32 @@ main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) {
     padding-top: 128px;
   }
 
+  /* FAQ: the source places the heading intro in a LEFT column and the accordion
+     in a RIGHT column, side by side. On this page the heading wrapper and the
+     .accordion-faq-wrapper are sibling wrappers within one big EDS section (which
+     also holds unrelated blocks), so a section-level grid can't be used without
+     disturbing the other blocks. Instead float just this heading wrapper into the
+     left half and indent the immediately-following accordion into the right half.
+     Scoped strictly to the FAQ heading + its adjacent accordion, so no other
+     block is affected. */
   main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) {
-    padding-top: 128px;
+    float: left;
+    width: 50%;
+    padding-top: 0;
+    padding-right: 32px;
+    box-sizing: border-box;
+  }
+
+  main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) + .accordion-faq-wrapper {
+    width: 50%;
+    margin-left: 50%;
+  }
+
+  /* Clear the float so the block after the accordion returns to full width. */
+  main > .section > .accordion-faq-wrapper::after {
+    content: '';
+    display: block;
+    clear: both;
   }
 }
 
