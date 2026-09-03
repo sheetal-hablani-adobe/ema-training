@@ -35,99 +35,47 @@ var CustomImportScript = (() => {
   };
   var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-  // tools/importer/import-article-index.js
-  var import_article_index_exports = {};
-  __export(import_article_index_exports, {
-    default: () => import_article_index_default
+  // tools/importer/import-faq.js
+  var import_faq_exports = {};
+  __export(import_faq_exports, {
+    default: () => import_faq_default
   });
 
-  // tools/importer/parsers/cards-media.js
+  // tools/importer/parsers/accordion-faq.js
   function parse(element, { document: document2 }) {
-    let cardEls;
-    const trendImages = element.querySelectorAll(".trend-card-image");
-    const directCount = element.querySelectorAll(":scope > *").length;
-    if (trendImages.length > directCount) {
-      cardEls = [];
-      const imageDivs = element.querySelectorAll(".trend-card-image");
-      imageDivs.forEach((imgDiv) => {
-        const wrapper = document2.createElement("div");
-        const anchor = imgDiv.closest("a[href]");
-        if (anchor && anchor.getAttribute("href")) {
-          wrapper.setAttribute("data-card-href", anchor.getAttribute("href"));
-        }
-        wrapper.appendChild(imgDiv.cloneNode(true));
-        let sib = imgDiv.nextElementSibling;
-        if (sib && sib.classList.contains("trend-card-body")) {
-          wrapper.appendChild(sib.cloneNode(true));
-        }
-        cardEls.push(wrapper);
-      });
-    } else {
-      cardEls = Array.from(element.querySelectorAll(":scope > *"));
-    }
+    const items = element.querySelectorAll("details.faq-item, details, .faq-item");
     const cells = [];
-    cardEls.forEach((card) => {
-      const img = card.querySelector("img");
-      const heading = card.querySelector("h1, h2, h3, h4, h5, h6");
-      let textCell = "";
-      if (heading) {
-        const href = card.tagName === "A" ? card.getAttribute("href") : card.getAttribute("data-card-href") || card.querySelector("a") && card.querySelector("a").getAttribute("href");
-        const parts = [];
-        const meta = card.querySelector(".article-card-meta");
-        let tagText = "";
-        let dateText = "";
-        if (meta) {
-          const metaSpans = Array.from(meta.querySelectorAll("span")).filter((s) => s.textContent.trim().length > 0);
-          tagText = metaSpans[0] ? metaSpans[0].textContent.trim() : "";
-          dateText = metaSpans[1] ? metaSpans[1].textContent.trim() : "";
-        } else {
-          const body = heading.parentElement || card;
-          const labelEl = Array.from(body.children).find((el) => el !== heading && !el.querySelector("img") && !/^H[1-6]$/.test(el.tagName) && el.textContent.trim().length > 0 && el.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING);
-          if (labelEl) tagText = labelEl.textContent.trim();
-        }
-        if (tagText) {
-          const tagP = document2.createElement("p");
-          tagP.textContent = tagText;
-          parts.push(tagP);
-        }
-        if (dateText) {
-          const dateP = document2.createElement("p");
-          dateP.textContent = dateText;
-          parts.push(dateP);
-        }
-        const titleEl = document2.createElement(heading.tagName.toLowerCase());
-        const titleText = heading.textContent.trim();
-        if (href) {
-          const a = document2.createElement("a");
-          a.setAttribute("href", href);
-          a.textContent = titleText;
-          titleEl.appendChild(a);
-        } else {
-          titleEl.textContent = titleText;
-        }
-        parts.push(titleEl);
-        Array.from(card.querySelectorAll("p")).filter((p) => p.textContent.trim().length > 0 && heading.compareDocumentPosition(p) & Node.DOCUMENT_POSITION_FOLLOWING).forEach((p) => {
-          const descP = document2.createElement("p");
-          descP.textContent = p.textContent.trim();
-          parts.push(descP);
-        });
-        textCell = parts;
+    items.forEach((item) => {
+      const summary = item.querySelector("summary.faq-question, summary");
+      let titleCell;
+      const titleSpan = summary ? summary.querySelector("span") : null;
+      if (titleSpan) {
+        titleCell = titleSpan.textContent.trim();
+      } else if (summary) {
+        titleCell = summary.textContent.trim();
       } else {
-        const textParts = Array.from(
-          card.querySelectorAll("p, span")
-        ).filter((el) => el.textContent.trim().length > 0);
-        if (textParts.length) textCell = textParts;
+        titleCell = "";
       }
-      const imageCell = img || "";
-      if (img || (Array.isArray(textCell) ? textCell.length : textCell)) {
-        cells.push([imageCell, textCell]);
+      const answer = item.querySelector(".faq-answer, .faq-content");
+      let contentCell;
+      if (answer) {
+        const nodes = Array.from(answer.childNodes).filter((n) => {
+          if (n.nodeType === 3) return n.textContent.trim().length > 0;
+          return true;
+        });
+        contentCell = nodes.length ? nodes : answer;
+      } else {
+        contentCell = "";
+      }
+      if (titleCell || contentCell && contentCell !== "") {
+        cells.push([titleCell, contentCell]);
       }
     });
     if (!cells.length) {
       element.replaceWith(...element.childNodes);
       return;
     }
-    const block = WebImporter.Blocks.createBlock(document2, { name: "cards-media", cells });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "accordion-faq", cells });
     element.replaceWith(block);
   }
 
@@ -236,9 +184,9 @@ var CustomImportScript = (() => {
     });
   }
 
-  // tools/importer/import-article-index.js
+  // tools/importer/import-faq.js
   var parsers = {
-    "cards-media": parse,
+    "accordion-faq": parse,
     "columns-feature": parse2
   };
   var transformers = [
@@ -246,25 +194,23 @@ var CustomImportScript = (() => {
     transform2
   ];
   var PAGE_TEMPLATE = {
-    name: "article-index",
-    description: "Blog listing / article index page (intro hero + featured article banner + article-card grid + optional gallery + newsletter CTA)",
+    name: "faq",
+    description: "FAQ page: hero + accordion FAQ list + contact columns + accent CTA",
     urls: [
-      "https://wknd-trendsetters.site/blog",
-      "https://wknd-trendsetters.site/fashion-insights"
+      "https://wknd-trendsetters.site/faq"
     ],
     blocks: [
       {
         name: "columns-feature",
         instances: [
           "#main-content > header.section.secondary-section > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl",
-          "#main-content > section.section > div.container > div.grid-layout.tablet-1-column.grid-gap-lg"
+          "#main-content > section.section.secondary-section:nth-of-type(2) > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl"
         ]
       },
       {
-        name: "cards-media",
+        name: "accordion-faq",
         instances: [
-          "#main-content > section.section > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md",
-          "#main-content > section.section > div.container > div.grid-layout.desktop-3-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-sm"
+          "#main-content > section.section:nth-of-type(1) div.faq-list"
         ]
       }
     ]
@@ -302,7 +248,7 @@ var CustomImportScript = (() => {
     console.log(`Found ${pageBlocks.length} block instances on page`);
     return pageBlocks;
   }
-  var import_article_index_default = {
+  var import_faq_default = {
     transform: (payload) => {
       const { document: document2, url, html, params } = payload;
       const main = document2.body;
@@ -340,5 +286,5 @@ var CustomImportScript = (() => {
       }];
     }
   };
-  return __toCommonJS(import_article_index_exports);
+  return __toCommonJS(import_faq_exports);
 })();

@@ -8,7 +8,9 @@
       "urls": [
         "https://wknd-trendsetters.site/about-us",
         "https://wknd-trendsetters.site/fashion-trends-young-adults-casual-sport",
-        "https://wknd-trendsetters.site/magazine/article-1"
+        "https://wknd-trendsetters.site/magazine/article-1",
+        "https://wknd-trendsetters.site/case-studies",
+        "https://wknd-trendsetters.site/"
       ],
       "representativeUrl": "https://wknd-trendsetters.site/about-us",
       "description": "To be named in naming step",
@@ -97,7 +99,8 @@
     {
       "name": "article-index",
       "urls": [
-        "https://wknd-trendsetters.site/blog"
+        "https://wknd-trendsetters.site/blog",
+        "https://wknd-trendsetters.site/fashion-insights"
       ],
       "representativeUrl": "https://wknd-trendsetters.site/blog",
       "description": "Blog listing / article index page",
@@ -134,7 +137,8 @@
     {
       "name": "trends-landing",
       "urls": [
-        "https://wknd-trendsetters.site/fashion-trends-young-adults"
+        "https://wknd-trendsetters.site/fashion-trends-young-adults",
+        "https://wknd-trendsetters.site/fashion-trends-of-the-season"
       ],
       "representativeUrl": "https://wknd-trendsetters.site/fashion-trends-young-adults",
       "description": "Trends landing page (hero + feature sections + card grid)",
@@ -173,6 +177,29 @@
             "#main-content > section.section.accent-section"
           ],
           "section": "accent"
+        }
+      ]
+    },
+    {
+      "name": "faq",
+      "urls": [
+        "https://wknd-trendsetters.site/faq"
+      ],
+      "representativeUrl": "https://wknd-trendsetters.site/faq",
+      "description": "FAQ page: hero + accordion FAQ list + contact columns + accent CTA",
+      "blocks": [
+        {
+          "name": "columns-feature",
+          "instances": [
+            "#main-content > header.section.secondary-section > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl",
+            "#main-content > section.section.secondary-section:nth-of-type(2) > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl"
+          ]
+        },
+        {
+          "name": "accordion-faq",
+          "instances": [
+            "#main-content > section.section:nth-of-type(1) div.faq-list"
+          ]
         }
       ]
     }

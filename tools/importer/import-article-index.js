@@ -28,24 +28,33 @@ const transformers = [
 // Section-* entries are omitted from this block list; the sections transformer
 // (wknd-trendsetters-sections.js) derives the grey/accent banded backgrounds
 // from the source DOM classes and emits section breaks + Section Metadata.
+// Selectors are CLASS-BASED (keyed off the distinguishing grid-layout classes)
+// rather than positional, so the same template covers every article-index page
+// (/blog, /fashion-insights, ...) despite differing section counts/order:
+//   - columns-feature: the hero (tablet-1-column grid-gap-xxl) and the featured
+//     split banner (tablet-1-column grid-gap-lg).
+//   - cards-media: the article-card grid (desktop-4-column ... grid-gap-md) and,
+//     where present, an image gallery (desktop-3-column ... grid-gap-sm).
 const PAGE_TEMPLATE = {
   name: 'article-index',
-  description: 'Blog listing / article index page (intro hero + featured article banner + article-card grid + newsletter CTA)',
+  description: 'Blog listing / article index page (intro hero + featured article banner + article-card grid + optional gallery + newsletter CTA)',
   urls: [
     'https://wknd-trendsetters.site/blog',
+    'https://wknd-trendsetters.site/fashion-insights',
   ],
   blocks: [
     {
       name: 'columns-feature',
       instances: [
         '#main-content > header.section.secondary-section > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl',
-        '#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.tablet-1-column.grid-gap-lg',
+        '#main-content > section.section > div.container > div.grid-layout.tablet-1-column.grid-gap-lg',
       ],
     },
     {
       name: 'cards-media',
       instances: [
-        '#articles > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md',
+        '#main-content > section.section > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md',
+        '#main-content > section.section > div.container > div.grid-layout.desktop-3-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-sm',
       ],
     },
   ],

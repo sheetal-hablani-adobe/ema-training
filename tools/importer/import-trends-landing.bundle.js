@@ -249,21 +249,28 @@ var CustomImportScript = (() => {
     name: "trends-landing",
     description: "Trends landing page (hero + feature/card grids + accent CTA band)",
     urls: [
-      "https://wknd-trendsetters.site/fashion-trends-young-adults"
+      "https://wknd-trendsetters.site/fashion-trends-young-adults",
+      "https://wknd-trendsetters.site/fashion-trends-of-the-season"
     ],
     blocks: [
       {
         name: "columns-feature",
         instances: [
-          "#main-content > header.section.secondary-section > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl"
+          "#main-content > header.section.secondary-section > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl",
+          // Split feature: a 2-column grid that stacks single-column (tablet-1-column
+          // grid-gap-lg). Exclude desktop-N-column so it never grabs the 3-up feature
+          // card grid (desktop-3-column tablet-1-column grid-gap-lg), which is cards-media.
+          '#main-content > section.section > div.container > div.grid-layout.tablet-1-column.grid-gap-lg:not([class*="desktop-"])'
         ]
       },
       {
         name: "cards-media",
         instances: [
-          "#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.desktop-3-column.tablet-1-column.grid-gap-xxl",
-          "#trends > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md",
-          "#main-content > section.section.secondary-section:nth-of-type(4) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-sm"
+          "#main-content > section.section > div.container > div.grid-layout.desktop-3-column.tablet-1-column.grid-gap-xxl",
+          "#main-content > section.section > div.container > div.grid-layout.desktop-3-column.tablet-1-column.grid-gap-lg",
+          "#main-content > section.section > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md",
+          "#main-content > section.section > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-sm",
+          "#main-content > section.section > div.container > div.grid-layout.desktop-3-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-sm"
         ]
       }
     ]

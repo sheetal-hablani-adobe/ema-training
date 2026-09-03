@@ -109,7 +109,7 @@ var CustomImportScript = (() => {
       const heading = card.querySelector("h1, h2, h3, h4, h5, h6");
       let textCell = "";
       if (heading) {
-        const href = card.tagName === "A" ? card.getAttribute("href") : (card.getAttribute("data-card-href") || (card.querySelector("a") && card.querySelector("a").getAttribute("href")));
+        const href = card.tagName === "A" ? card.getAttribute("href") : card.getAttribute("data-card-href") || card.querySelector("a") && card.querySelector("a").getAttribute("href");
         const parts = [];
         const meta = card.querySelector(".article-card-meta");
         let tagText = "";
@@ -292,23 +292,23 @@ var CustomImportScript = (() => {
     name: "about-us",
     description: "About-us editorial page: two-column intros, image and article card grids, profile tabs, FAQ accordion, and an overlay hero banner.",
     urls: [
-      "https://wknd-trendsetters.site/about-us"
+      "https://wknd-trendsetters.site/about-us",
+      "https://wknd-trendsetters.site/case-studies",
+      "https://wknd-trendsetters.site/"
     ],
     blocks: [
       {
         name: "columns-feature",
         instances: [
           "#main-content > header.section.secondary-section > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl",
-          "#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.tablet-1-column.grid-gap-lg",
-          "#main-content div.grid-layout.tablet-1-column.grid-gap-lg"
+          "#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.tablet-1-column.grid-gap-lg"
         ]
       },
       {
         name: "cards-media",
         instances: [
           "#main-content > section.section.secondary-section:nth-of-type(2) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-sm",
-          "#main-content > section.section.secondary-section:nth-of-type(4) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md",
-          "#main-content div.grid-layout.desktop-4-column.grid-gap-md"
+          "#main-content > section.section.secondary-section:nth-of-type(4) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md"
         ]
       },
       {
