@@ -72,8 +72,7 @@ main:not(:has(> .section.grey, > .section.accent)) .cards-media {
 .cards-media:not(:has(a)) .cards-media-card-body h3 {
   margin: 12px 0 8px;
   font-family: Syncopate, var(--heading-font-family);
-  /* Source uses the .h3-heading scale (--text-3xl = 2rem / 32px). */
-  font-size: 2rem;
+  font-size: 2rem; /* source .h3-heading scale: --text-3xl = 2rem / 32px */
   font-weight: 700;
   line-height: 1.1;
   text-transform: uppercase;
