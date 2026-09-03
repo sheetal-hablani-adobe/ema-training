@@ -63,6 +63,28 @@ main:not(:has(> .section.grey, > .section.accent)) .cards-media {
   object-fit: cover;
 }
 
+/* Feature-grid instance (no card link) that DOES carry a body — image + heading
+   + description (e.g. the "Tennis looks, game strong" 3-up grid). The source
+   styles these headings as uppercase Syncopate; the image-only gallery cards
+   have no body/heading so they're unaffected. */
+.cards-media:not(:has(a)) .cards-media-card-body h1,
+.cards-media:not(:has(a)) .cards-media-card-body h2,
+.cards-media:not(:has(a)) .cards-media-card-body h3 {
+  margin: 12px 0 8px;
+  font-family: Syncopate, var(--heading-font-family);
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: rgb(0 0 0);
+}
+
+.cards-media:not(:has(a)) .cards-media-card-body p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgb(102 102 102);
+}
+
 /* ===========================================================================
    ARTICLES instance -- image + meta/title card (gap 16px).
    Card: white, 1px grey border, 20px radius, clipped corners.
