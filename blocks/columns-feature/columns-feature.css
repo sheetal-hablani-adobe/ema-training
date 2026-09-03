@@ -235,10 +235,14 @@
     align-items: center;
   }
 
+  /* Match the source hero's tight line-height (~44px on 56px) and looser
+     letter-spacing (-0.8px). The looser tracking is what makes the title wrap
+     the same way as the source (e.g. "never" and "sleeps" fall on their own
+     lines) instead of packing more words per line. */
   .columns-feature.columns-feature-hero h1 {
     font-size: 56px;
-    line-height: 1.1;
-    letter-spacing: -1.12px;
+    line-height: 0.79;
+    letter-spacing: -0.8px;
   }
 
   .columns-feature h2 {
