@@ -69,7 +69,7 @@ footer .footer-social a {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #1a1a1a;
+  background: #404040;
   color: #fff;
   transition: background 0.2s ease, opacity 0.2s ease;
 }
@@ -116,7 +116,7 @@ footer .footer-col a:hover {
 }
 
 footer .footer-social a:hover {
-  background: #333;
+  background: #999;
   opacity: 0.9;
 }
 
