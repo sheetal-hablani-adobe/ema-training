@@ -7,6 +7,7 @@ import columnsFeatureParser from './parsers/columns-feature.js';
 
 // TRANSFORMER IMPORTS
 import wkndTrendsettersCleanupTransformer from './transformers/wknd-trendsetters-cleanup.js';
+import wkndTrendsettersSectionsTransformer from './transformers/wknd-trendsetters-sections.js';
 
 // PARSER REGISTRY
 const parsers = {
@@ -15,14 +16,18 @@ const parsers = {
 };
 
 // TRANSFORMER REGISTRY
+// Cleanup runs first (removes chrome); the sections transformer runs last in
+// afterTransform to split the page into per-source-section EDS sections and add
+// grey/accent Section Metadata for the alternating banded backgrounds.
 const transformers = [
   wkndTrendsettersCleanupTransformer,
+  wkndTrendsettersSectionsTransformer,
 ];
 
 // PAGE TEMPLATE CONFIGURATION - Embedded from page-templates.json
-// Section-* entries (grey/accent bands) are applied at the design/CSS layer
-// (scoped selectors), not via content-level Section Metadata — matching the
-// about-us and trends-landing templates.
+// Section-* entries are omitted from this block list; the sections transformer
+// (wknd-trendsetters-sections.js) derives the grey/accent banded backgrounds
+// from the source DOM classes and emits section breaks + Section Metadata.
 const PAGE_TEMPLATE = {
   name: 'article-index',
   description: 'Blog listing / article index page (intro hero + featured article banner + article-card grid + newsletter CTA)',

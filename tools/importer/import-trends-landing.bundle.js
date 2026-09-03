@@ -42,7 +42,7 @@ var CustomImportScript = (() => {
   });
 
   // tools/importer/parsers/cards-media.js
-  function parse(element, { document }) {
+  function parse(element, { document: document2 }) {
     let cardEls;
     const trendImages = element.querySelectorAll(".trend-card-image");
     const directCount = element.querySelectorAll(":scope > *").length;
@@ -50,7 +50,7 @@ var CustomImportScript = (() => {
       cardEls = [];
       const imageDivs = element.querySelectorAll(".trend-card-image");
       imageDivs.forEach((imgDiv) => {
-        const wrapper = document.createElement("div");
+        const wrapper = document2.createElement("div");
         const anchor = imgDiv.closest("a[href]");
         if (anchor && anchor.getAttribute("href")) {
           wrapper.setAttribute("data-card-href", anchor.getAttribute("href"));
@@ -86,19 +86,19 @@ var CustomImportScript = (() => {
           if (labelEl) tagText = labelEl.textContent.trim();
         }
         if (tagText) {
-          const tagP = document.createElement("p");
+          const tagP = document2.createElement("p");
           tagP.textContent = tagText;
           parts.push(tagP);
         }
         if (dateText) {
-          const dateP = document.createElement("p");
+          const dateP = document2.createElement("p");
           dateP.textContent = dateText;
           parts.push(dateP);
         }
-        const titleEl = document.createElement(heading.tagName.toLowerCase());
+        const titleEl = document2.createElement(heading.tagName.toLowerCase());
         const titleText = heading.textContent.trim();
         if (href) {
-          const a = document.createElement("a");
+          const a = document2.createElement("a");
           a.setAttribute("href", href);
           a.textContent = titleText;
           titleEl.appendChild(a);
@@ -107,7 +107,7 @@ var CustomImportScript = (() => {
         }
         parts.push(titleEl);
         Array.from(card.querySelectorAll("p")).filter((p) => p.textContent.trim().length > 0 && heading.compareDocumentPosition(p) & Node.DOCUMENT_POSITION_FOLLOWING).forEach((p) => {
-          const descP = document.createElement("p");
+          const descP = document2.createElement("p");
           descP.textContent = p.textContent.trim();
           parts.push(descP);
         });
@@ -127,7 +127,7 @@ var CustomImportScript = (() => {
       element.replaceWith(...element.childNodes);
       return;
     }
-    const block = WebImporter.Blocks.createBlock(document, { name: "cards-media", cells });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "cards-media", cells });
     element.replaceWith(block);
   }
 
@@ -137,32 +137,32 @@ var CustomImportScript = (() => {
     if (col.querySelector("h1, h2, h3, h4, h5, h6, a, button")) return false;
     return col.textContent.trim().length === 0;
   }
-  function normaliseImageColumn(col, document) {
+  function normaliseImageColumn(col, document2) {
     const media = Array.from(col.querySelectorAll("img, picture"));
     if (media.length < 2) return;
-    const wrapper = document.createElement("div");
+    const wrapper = document2.createElement("div");
     media.forEach((m) => {
       const node = m.tagName === "IMG" && m.closest("picture") ? m.closest("picture") : m;
       if (node.parentElement === wrapper) return;
-      const p = document.createElement("p");
+      const p = document2.createElement("p");
       p.appendChild(node);
       wrapper.appendChild(p);
     });
     col.textContent = "";
     while (wrapper.firstChild) col.appendChild(wrapper.firstChild);
   }
-  function parse2(element, { document }) {
+  function parse2(element, { document: document2 }) {
     const columnEls = Array.from(element.querySelectorAll(":scope > div")).filter((col) => col.textContent.trim().length > 0 || col.querySelector("img, picture, a"));
     if (!columnEls.length) {
       element.replaceWith(...element.childNodes);
       return;
     }
     columnEls.forEach((col) => {
-      if (isImageOnlyColumn(col)) normaliseImageColumn(col, document);
+      if (isImageOnlyColumn(col)) normaliseImageColumn(col, document2);
     });
     const cells = [];
     cells.push(columnEls.map((col) => col));
-    const block = WebImporter.Blocks.createBlock(document, { name: "columns-feature", cells });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "columns-feature", cells });
     element.replaceWith(block);
   }
 
@@ -187,13 +187,63 @@ var CustomImportScript = (() => {
     }
   }
 
+  // tools/importer/transformers/wknd-trendsetters-sections.js
+  var TransformHook2 = { beforeTransform: "beforeTransform", afterTransform: "afterTransform" };
+  var SECTION_STYLE_BY_CLASS = {
+    "secondary-section": "grey",
+    "accent-section": "accent"
+  };
+  function resolveSectionStyle(sectionEl, template) {
+    const classes = Object.keys(SECTION_STYLE_BY_CLASS);
+    for (let i = 0; i < classes.length; i += 1) {
+      if (sectionEl.classList.contains(classes[i])) return SECTION_STYLE_BY_CLASS[classes[i]];
+    }
+    const blocks = template && Array.isArray(template.blocks) ? template.blocks : [];
+    for (let i = 0; i < blocks.length; i += 1) {
+      const b = blocks[i];
+      if (!b.section || !Array.isArray(b.instances)) continue;
+      const hit = b.instances.some((sel) => {
+        try {
+          return sectionEl.matches(sel);
+        } catch (e) {
+          return false;
+        }
+      });
+      if (hit) return b.section;
+    }
+    return null;
+  }
+  function transform2(hookName, element, payload) {
+    if (hookName !== TransformHook2.afterTransform) return;
+    const template = payload && payload.template || {};
+    const mainContent = element.querySelector("#main-content") || element;
+    const sections = Array.from(
+      mainContent.querySelectorAll(":scope > header.section, :scope > section.section")
+    );
+    if (sections.length < 2) return;
+    sections.forEach((sectionEl, index) => {
+      if (index > 0) {
+        sectionEl.before(document.createElement("hr"));
+      }
+      const style = resolveSectionStyle(sectionEl, template);
+      if (style) {
+        const metadataBlock = WebImporter.Blocks.createBlock(document, {
+          name: "Section Metadata",
+          cells: { Style: style }
+        });
+        sectionEl.append(metadataBlock);
+      }
+    });
+  }
+
   // tools/importer/import-trends-landing.js
   var parsers = {
     "cards-media": parse,
     "columns-feature": parse2
   };
   var transformers = [
-    transform
+    transform,
+    transform2
   ];
   var PAGE_TEMPLATE = {
     name: "trends-landing",
@@ -230,11 +280,11 @@ var CustomImportScript = (() => {
       }
     });
   }
-  function findBlocksOnPage(document, template) {
+  function findBlocksOnPage(document2, template) {
     const pageBlocks = [];
     template.blocks.forEach((blockDef) => {
       blockDef.instances.forEach((selector) => {
-        const elements = document.querySelectorAll(selector);
+        const elements = document2.querySelectorAll(selector);
         if (elements.length === 0) {
           console.warn(`Block "${blockDef.name}" selector not found: ${selector}`);
         }
@@ -253,16 +303,16 @@ var CustomImportScript = (() => {
   }
   var import_trends_landing_default = {
     transform: (payload) => {
-      const { document, url, html, params } = payload;
-      const main = document.body;
+      const { document: document2, url, html, params } = payload;
+      const main = document2.body;
       executeTransformers("beforeTransform", main, payload);
-      const pageBlocks = findBlocksOnPage(document, PAGE_TEMPLATE);
+      const pageBlocks = findBlocksOnPage(document2, PAGE_TEMPLATE);
       pageBlocks.forEach((block) => {
         if (!block.element.parentNode) return;
         const parser = parsers[block.name];
         if (parser) {
           try {
-            parser(block.element, { document, url, params });
+            parser(block.element, { document: document2, url, params });
           } catch (e) {
             console.error(`Failed to parse ${block.name} (${block.selector}):`, e);
           }
@@ -271,10 +321,10 @@ var CustomImportScript = (() => {
         }
       });
       executeTransformers("afterTransform", main, payload);
-      const hr = document.createElement("hr");
+      const hr = document2.createElement("hr");
       main.appendChild(hr);
-      WebImporter.rules.createMetadata(main, document);
-      WebImporter.rules.transformBackgroundImages(main, document);
+      WebImporter.rules.createMetadata(main, document2);
+      WebImporter.rules.transformBackgroundImages(main, document2);
       WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
       const rawPath = new URL(params.originalURL).pathname.replace(/\/$/, "").replace(/\.html?$/, "");
       const path = WebImporter.FileUtils.sanitizePath(rawPath === "" ? "/index" : rawPath);
@@ -282,7 +332,7 @@ var CustomImportScript = (() => {
         element: main,
         path,
         report: {
-          title: document.title,
+          title: document2.title,
           template: PAGE_TEMPLATE.name,
           blocks: pageBlocks.map((b) => b.name)
         }

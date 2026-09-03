@@ -330,6 +330,35 @@ main .section.highlight {
 }
 
 /* ---------------------------------------------------------------------------
+   Banded sections (grey / accent) — real EDS sections carrying Section Metadata
+   Style=grey|accent (see decorateSectionStyles in scripts.js). Used by pages that
+   alternate banded backgrounds like the source (trends-landing, article-index).
+   The section spans the full page width already (only its inner > div is capped
+   at 1200px), so a background-color fills edge-to-edge with no calc pull-out.
+   On any page that has these real bands, drop the default 40px inter-section
+   margins so the bands sit flush (as in the source) and give every section even
+   vertical padding instead.
+   --------------------------------------------------------------------------- */
+main:has(> .section.grey, > .section.accent) > .section {
+  margin: 0;
+  padding: 56px 0;
+}
+
+main > .section.grey {
+  background-color: rgb(245 245 245);
+}
+
+main > .section.accent {
+  background-color: rgb(244 254 139);
+}
+
+@media (width >= 900px) {
+  main:has(> .section.grey, > .section.accent) > .section {
+    padding: 88px 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    about-us default-content section headings (rc3 gallery, rc5 articles, rc6 FAQ).
    These headings are authored as default content between blocks; match the
    source's uppercase treatment and per-section alignment/background.
@@ -357,11 +386,14 @@ main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) h2 + p 
   color: rgb(102 102 102);
 }
 
-/* rc3 gallery + rc5 articles: centered heading on a full-bleed grey band that
-   connects to the grey card block below.
+/* Centered heading + intro that introduces a card grid (all pages, banded or not).
+   On LEGACY single-section pages (about-us, casual-sport) there is no real banded
+   section, so the grey gallery/articles band is faked here by pulling the heading
+   wrapper full-bleed and painting it grey. Pages that carry real Section Metadata
+   bands (`.section.grey` / `.section.accent`) override this below to drop the
+   pull-out and take the background from the section itself.
    The boilerplate `main > .section > div { margin: auto }` resets margin-inline,
-   so set explicit left/right margins (not the shorthand) at higher specificity
-   to guarantee the full-bleed pull-out wins the cascade. */
+   so set explicit left/right margins at higher specificity to win the cascade. */
 main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) {
   width: auto;
   max-width: none;
@@ -380,6 +412,23 @@ main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) > * {
   padding-inline: 24px;
 }
 
+/* Real-banded pages: the section already supplies the grey/accent background, so
+   undo the faked full-bleed pull-out (it would push the heading outside the
+   section box) and let the wrapper sit in the normal 1200px column.
+   Disable no-descending-specificity: this override must follow the faked-band
+   rule, and its `:has()`/`.grey` specificity unavoidably exceeds a few later
+   legacy/blog selectors that touch the same wrapper. */
+/* stylelint-disable no-descending-specificity */
+main > .section.grey > .default-content-wrapper:has(+ .cards-media-wrapper),
+main > .section.accent > .default-content-wrapper:has(+ .cards-media-wrapper) {
+  width: auto;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: transparent;
+}
+/* stylelint-enable no-descending-specificity */
+
 /* The grey card block that immediately follows a heading loses its top band
    padding so the heading and cards read as one grey section. */
 main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) + .cards-media-wrapper .cards-media {
@@ -387,6 +436,7 @@ main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) + .cards-
 }
 
 /* rc6 FAQ: left-aligned heading on white (no band). */
+/* stylelint-disable-next-line no-descending-specificity */
 main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) {
   padding-top: 64px;
 }
@@ -415,6 +465,7 @@ main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) {
    column while the header stays wide. Applied via the `blog` page template,
    which the importer stamps into page metadata so every blog page inherits it.
    --------------------------------------------------------------------------- */
+/* stylelint-disable-next-line no-descending-specificity */
 body.blog main > .section > .default-content-wrapper,
 body.blog main > .section > .table-spec-wrapper {
   max-width: 768px;
