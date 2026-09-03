@@ -2,9 +2,9 @@
 /* global WebImporter */
 
 // PARSER IMPORTS
-import accordionFaqParser from './parsers/accordion-faq.js';
 import cardsMediaParser from './parsers/cards-media.js';
 import columnsFeatureParser from './parsers/columns-feature.js';
+import faqColumnsParser from './parsers/faq-columns.js';
 import heroOverlayParser from './parsers/hero-overlay.js';
 import tabsProfileParser from './parsers/tabs-profile.js';
 
@@ -13,9 +13,9 @@ import wkndTrendsettersCleanupTransformer from './transformers/wknd-trendsetters
 
 // PARSER REGISTRY
 const parsers = {
-  'accordion-faq': accordionFaqParser,
   'cards-media': cardsMediaParser,
   'columns-feature': columnsFeatureParser,
+  'faq-columns': faqColumnsParser,
   'hero-overlay': heroOverlayParser,
   'tabs-profile': tabsProfileParser,
 };
@@ -56,9 +56,13 @@ const PAGE_TEMPLATE = {
       ],
     },
     {
-      name: 'accordion-faq',
+      name: 'faq-columns',
       instances: [
-        '#main-content > section.section:nth-of-type(5) div.faq-list',
+        // Primary: the FAQ grid (heading + subheading cell + div.faq-list cell).
+        '#main-content > section.section:nth-of-type(5) > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl',
+        // Class-based fallback: any grid that actually contains a faq-list, so it
+        // never accidentally matches the header/intro grids of the same class.
+        '#main-content div.grid-layout.tablet-1-column.grid-gap-xxl:has(div.faq-list)',
       ],
     },
     {

@@ -59,9 +59,10 @@
           "section": "grey"
         },
         {
-          "name": "accordion-faq",
+          "name": "faq-columns",
           "instances": [
-            "#main-content > section.section:nth-of-type(5) div.faq-list"
+            "#main-content > section.section:nth-of-type(5) > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl",
+            "#main-content div.grid-layout.tablet-1-column.grid-gap-xxl:has(div.faq-list)"
           ]
         },
         {

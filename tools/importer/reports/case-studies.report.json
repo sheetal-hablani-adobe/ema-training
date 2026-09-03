@@ -1,15 +1,8 @@
 {
-  "status": "success",
+  "status": "failed",
   "url": "https://wknd-trendsetters.site/case-studies",
   "path": "case-studies",
-  "timestamp": "2026-09-03T06:26:36.348Z",
-  "title": "Inspiring Case Studies | Fashion Blog",
-  "template": "about-us",
-  "blocks": [
-    "columns-feature",
-    "columns-feature",
-    "cards-media",
-    "tabs-profile",
-    "hero-overlay"
-  ]
+  "timestamp": "2026-09-03T08:29:22.607Z",
+  "error": "CustomImportScript.default not found after 10s. The bundled script may not have loaded correctly. Check browser console for errors.",
+  "errorStack": "Error: CustomImportScript.default not found after 10s. The bundled script may not have loaded correctly. Check browser console for errors.\n    at processUrl (file:///home/node/.excat-marketplaces/excat-marketplace/excat/skills/excat-content-import/scripts/run-bulk-import.js:662:13)\n    at async main (file:///home/node/.excat-marketplaces/excat-marketplace/excat/skills/excat-content-import/scripts/run-bulk-import.js:954:22)"
 }

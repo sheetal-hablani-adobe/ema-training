@@ -63,6 +63,29 @@ main:not(:has(> .section.grey, > .section.accent)) .cards-media {
   object-fit: cover;
 }
 
+/* Feature-grid instance (no card link) that DOES carry a body — image + heading
+   + description (e.g. the "Tennis looks, game strong" 3-up grid). The source
+   styles these headings as uppercase Syncopate; the image-only gallery cards
+   have no body/heading so they're unaffected. */
+.cards-media:not(:has(a)) .cards-media-card-body h1,
+.cards-media:not(:has(a)) .cards-media-card-body h2,
+.cards-media:not(:has(a)) .cards-media-card-body h3 {
+  margin: 12px 0 8px;
+  font-family: Syncopate, var(--heading-font-family);
+  font-size: 2rem; /* source .h3-heading scale: --text-3xl = 2rem / 32px */
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: rgb(0 0 0);
+}
+
+.cards-media:not(:has(a)) .cards-media-card-body p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgb(102 102 102);
+}
+
 /* ===========================================================================
    ARTICLES instance -- image + meta/title card (gap 16px).
    Card: white, 1px grey border, 20px radius, clipped corners.
@@ -180,5 +203,13 @@ main:not(:has(> .section.grey, > .section.accent)) .cards-media {
 
   .cards-media > ul {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Feature grid (no card link, but each card HAS a body/heading, e.g. the
+     "Tennis looks, game strong" 3-up) is 3 columns in the source — wider cards
+     so the uppercase headings sit on ~2 lines. The image-only gallery
+     (no body) and the article grid (has links) stay at 4 columns above. */
+  .cards-media:not(:has(a)):has(.cards-media-card-body) > ul {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
