@@ -341,7 +341,7 @@ main .section.highlight {
    --------------------------------------------------------------------------- */
 main:has(> .section.grey, > .section.accent) > .section {
   margin: 0;
-  padding: 56px 0;
+  padding: 64px 0;
 }
 
 main > .section.grey {
@@ -350,6 +350,22 @@ main > .section.grey {
 
 main > .section.accent {
   background-color: rgb(244 254 139);
+}
+
+/* Standalone default-content bands (e.g. the grey "Young style, real stories"
+   intro and the accent "Fresh fits, bold moves" CTA) are centered in the source.
+   The heading-before-a-card-grid rule above only catches wrappers with a
+   following .cards-media-wrapper, so center any remaining default content that
+   sits directly in a grey/accent band. */
+main > .section.grey > .default-content-wrapper,
+main > .section.accent > .default-content-wrapper {
+  text-align: center;
+}
+
+@media (width >= 900px) {
+  main:has(> .section.grey, > .section.accent) > .section {
+    padding: 128px 0;
+  }
 }
 
 @media (width >= 900px) {
