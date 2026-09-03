@@ -34,6 +34,14 @@
   color: rgb(0 0 0);
 }
 
+/* Split-feature promo text column (image + heading + copy + single CTA): centre
+   its heading, copy, and CTA. Tagged by the block JS (columns-feature-promo) so
+   this never affects the article-intro / featured-banner text columns, which
+   lead with a breadcrumb/meta line and stay left-aligned. */
+.columns-feature .columns-feature-promo {
+  text-align: center;
+}
+
 /* rc2 article-intro breadcrumbs: inline links with a chevron between crumbs.
    The source's separator was an inline SVG stripped on import, so recreate it
    with a CSS ::before chevron on every crumb after the first. */
@@ -72,14 +80,20 @@
    large uppercase heading, subheading, pill CTAs and a 2-up image collage.
    =========================================================================== */
 
-/* Full-width grey band. The block lives inside the centered .section > div
-   (max-width 1200px), so calc(50% - 50vw) breaks it out to the viewport edges
-   regardless of the section padding. */
+/* Hero vertical rhythm. NO background here — the grey comes from the section
+   wrapper (real .section.grey band, or the legacy faked band below). */
 .columns-feature.columns-feature-hero {
+  padding: 64px 0;
+}
+
+/* LEGACY faked grey band — ONLY on pages WITHOUT real Section Metadata bands
+   (about-us, casual-sport, homepage, case-studies). There the hero block itself
+   becomes the full-bleed grey band. On real-banded pages the .section.grey
+   wrapper supplies the background, so this full-bleed pull-out must not apply. */
+main:not(:has(> .section.grey, > .section.accent)) .columns-feature.columns-feature-hero {
   width: auto;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  padding: 64px 0;
   background-color: rgb(245 245 245);
 }
 
@@ -117,7 +131,8 @@
   color: rgb(0 0 0);
 }
 
-/* CTA row (the paragraph that holds the two links) */
+/* CTA row (the paragraph that holds the action link[s]) */
+.columns-feature p.columns-feature-cta,
 .columns-feature.columns-feature-hero p.columns-feature-cta {
   display: flex;
   flex-wrap: wrap;
@@ -125,48 +140,58 @@
   margin-top: 32px;
 }
 
+/* Centre the CTA within the split-feature promo column (see the promo rule
+   above). Placed after the CTA row's flex declaration so specificity ascends. */
+.columns-feature .columns-feature-promo p.columns-feature-cta {
+  justify-content: center;
+}
+
 /* Pill CTAs -- links are authored as plain <a>, not EDS .button.
-   Source uses a hard offset shadow (4px 4px 0 0 #000) that presses in on hover. */
-.columns-feature.columns-feature-hero p a:any-link {
+   Source uses a hard offset shadow (4px 4px 0 0 #000) that presses in on hover.
+   Primary CTA is solid black by default (covers a lone CTA like "See trends"
+   or the split-feature "Explore the blog"). Applies to the hero row and to any
+   non-hero CTA paragraph (columns-feature-cta) — e.g. the split feature. */
+.columns-feature.columns-feature-hero p a:any-link,
+.columns-feature p.columns-feature-cta a:any-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   margin: 0;
   padding: 12px 24px;
-  border: 2px solid rgb(0 0 0);
+  border: 2px solid var(--color-black);
   border-radius: 9999px;
   font-size: 14px;
   font-weight: 600;
   line-height: 1.25;
   text-decoration: none;
   white-space: nowrap;
-  box-shadow: 4px 4px 0 0 rgb(0 0 0);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-/* "See case" -- solid black */
-.columns-feature.columns-feature-hero p a:any-link:first-of-type {
-  background-color: rgb(0 0 0);
+  background-color: var(--color-black);
   color: rgb(255 255 255);
+  box-shadow: var(--shadow-button);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-/* "All stories" -- outlined / secondary */
-.columns-feature.columns-feature-hero p a:any-link:last-of-type {
+/* Secondary CTA -- outlined, only when there is a second link in the hero row
+   (e.g. about-us "All stories" after "See case"). :not(:first-of-type) keeps a
+   single CTA solid while flipping any subsequent one to the outlined style. */
+.columns-feature.columns-feature-hero p a:any-link:not(:first-of-type) {
   background-color: rgb(255 255 255);
-  color: rgb(0 0 0);
+  color: var(--color-black);
 }
 
-/* Hover: shrink the shadow (no positional shift, so the button stays put
-   under the pointer and clicks always land). */
-.columns-feature.columns-feature-hero p a:any-link:hover {
+/* Hover: lift the button up-left and grow the offset shadow. */
+.columns-feature.columns-feature-hero p a:any-link:hover,
+.columns-feature p.columns-feature-cta a:any-link:hover {
   text-decoration: none;
-  box-shadow: 2px 2px 0 0 rgb(0 0 0);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--color-black);
 }
 
 /* Press-in only while actively pressed. */
-.columns-feature.columns-feature-hero p a:any-link:active {
+.columns-feature.columns-feature-hero p a:any-link:active,
+.columns-feature p.columns-feature-cta a:any-link:active {
   transform: translate(2px, 2px);
-  box-shadow: 0 0 0 0 rgb(0 0 0);
+  box-shadow: 0 0 0 0 var(--color-black);
 }
 
 /* Image collage: the img-col holds the pictures directly (the JS unwraps any
@@ -216,10 +241,14 @@
     align-items: center;
   }
 
+  /* Match the source hero's tight line-height (~44px on 56px) and looser
+     letter-spacing (-0.8px). The looser tracking is what makes the title wrap
+     the same way as the source (e.g. "never" and "sleeps" fall on their own
+     lines) instead of packing more words per line. */
   .columns-feature.columns-feature-hero h1 {
     font-size: 56px;
-    line-height: 1.1;
-    letter-spacing: -1.12px;
+    line-height: 0.79;
+    letter-spacing: -0.8px;
   }
 
   .columns-feature h2 {

@@ -18,9 +18,14 @@
   --text-color: #131313;
   --link-color: #3b63fb;
   --link-hover-color: #1d3ecf;
+  --color-black: #000;
+
+  /* pill CTA button (offset-shadow) — from the source design tokens */
+  --shadow-button: 4px 4px 0 0 var(--color-black);
+  --transition-fast: 0.15s ease;
 
   /* fonts */
-  --body-font-family: roboto, roboto-fallback, sans-serif;
+  --body-font-family: 'Instrument Sans', roboto, roboto-fallback, sans-serif;
   --heading-font-family: roboto-condensed, roboto-condensed-fallback, sans-serif;
 
   /* body sizes */
@@ -325,6 +330,51 @@ main .section.highlight {
 }
 
 /* ---------------------------------------------------------------------------
+   Banded sections (grey / accent) — real EDS sections carrying Section Metadata
+   Style=grey|accent (see decorateSectionStyles in scripts.js). Used by pages that
+   alternate banded backgrounds like the source (trends-landing, article-index).
+   The section spans the full page width already (only its inner > div is capped
+   at 1200px), so a background-color fills edge-to-edge with no calc pull-out.
+   On any page that has these real bands, drop the default 40px inter-section
+   margins so the bands sit flush (as in the source) and give every section even
+   vertical padding instead.
+   --------------------------------------------------------------------------- */
+main:has(> .section.grey, > .section.accent) > .section {
+  margin: 0;
+  padding: 64px 0;
+}
+
+main > .section.grey {
+  background-color: rgb(245 245 245);
+}
+
+main > .section.accent {
+  background-color: rgb(244 254 139);
+}
+
+/* Standalone default-content bands (e.g. the grey "Young style, real stories"
+   intro and the accent "Fresh fits, bold moves" CTA) are centered in the source.
+   The heading-before-a-card-grid rule above only catches wrappers with a
+   following .cards-media-wrapper, so center any remaining default content that
+   sits directly in a grey/accent band. */
+main > .section.grey > .default-content-wrapper,
+main > .section.accent > .default-content-wrapper {
+  text-align: center;
+}
+
+@media (width >= 900px) {
+  main:has(> .section.grey, > .section.accent) > .section {
+    padding: 128px 0;
+  }
+}
+
+@media (width >= 900px) {
+  main:has(> .section.grey, > .section.accent) > .section {
+    padding: 88px 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    about-us default-content section headings (rc3 gallery, rc5 articles, rc6 FAQ).
    These headings are authored as default content between blocks; match the
    source's uppercase treatment and per-section alignment/background.
@@ -334,7 +384,10 @@ main .section.highlight {
    introduces a following block. */
 main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) h2,
 main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) h2 {
-  margin: 0;
+  /* margin-block 0, but keep the auto inline margins from the `> *` rule so the
+     max-width:1200px box stays centred in the full-bleed band (a `margin: 0`
+     shorthand here would reset those and pin the heading to the left). */
+  margin-block: 0;
   font-family: Syncopate, var(--heading-font-family);
   font-weight: 700;
   text-transform: uppercase;
@@ -343,39 +396,53 @@ main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) h2 {
 
 main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) h2 + p,
 main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) h2 + p {
-  margin: 8px 0 0;
+  /* Same reasoning: set block margins only, preserve inline auto centring. */
+  margin-block: 8px 0;
   font-size: 18px;
   color: rgb(102 102 102);
 }
 
-/* rc3 gallery + rc5 articles: centered heading on a full-bleed grey band that
-   connects to the grey card block below.
-   The boilerplate `main > .section > div { margin: auto }` resets margin-inline,
-   so set explicit left/right margins (not the shorthand) at higher specificity
-   to guarantee the full-bleed pull-out wins the cascade. */
+/* Centered heading + intro that introduces a card grid (all pages, banded or not). */
 main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) {
-  width: auto;
-  max-width: none;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
   padding: 64px 0 0;
-  background-color: rgb(245 245 245);
   text-align: center;
 }
 
 main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) > * {
+  box-sizing: border-box;
+  width: 100%;
   max-width: 1200px;
   margin-inline: auto;
   padding-inline: 24px;
 }
 
+/* LEGACY faked grey band — ONLY on pages WITHOUT real Section Metadata bands
+   (about-us, casual-sport, homepage, case-studies). Those pages import as a
+   single EDS section, so the grey gallery/articles band is faked by pulling the
+   heading wrapper full-bleed and painting it grey. Pages that DO carry real
+   `.section.grey` / `.section.accent` bands must never get this — their white
+   sections would otherwise show a stray grey heading strip (the section itself
+   already supplies the correct background). Gating the whole rule on
+   `main:not(:has(...))` keeps the faked band off every banded page, on grey AND
+   white sections alike. */
+main:not(:has(> .section.grey, > .section.accent))
+  > .section > .default-content-wrapper:has(+ .cards-media-wrapper) {
+  width: auto;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  background-color: rgb(245 245 245);
+}
+
 /* The grey card block that immediately follows a heading loses its top band
-   padding so the heading and cards read as one grey section. */
-main > .section > .default-content-wrapper:has(+ .cards-media-wrapper) + .cards-media-wrapper .cards-media {
+   padding so the heading and cards read as one grey section (legacy pages only). */
+main:not(:has(> .section.grey, > .section.accent))
+  > .section > .default-content-wrapper:has(+ .cards-media-wrapper) + .cards-media-wrapper .cards-media {
   padding-top: 32px;
 }
 
 /* rc6 FAQ: left-aligned heading on white (no band). */
+/* stylelint-disable-next-line no-descending-specificity */
 main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) {
   padding-top: 64px;
 }
@@ -404,6 +471,7 @@ main > .section > .default-content-wrapper:has(+ .accordion-faq-wrapper) {
    column while the header stays wide. Applied via the `blog` page template,
    which the importer stamps into page metadata so every blog page inherits it.
    --------------------------------------------------------------------------- */
+/* stylelint-disable-next-line no-descending-specificity */
 body.blog main > .section > .default-content-wrapper,
 body.blog main > .section > .table-spec-wrapper {
   max-width: 768px;
@@ -482,5 +550,84 @@ body.blog main > .section > .default-content-wrapper blockquote {
 
 body.blog main > .section > .default-content-wrapper blockquote p {
   color: rgb(64 64 64);
+}
+
+/* ---------------------------------------------------------------------------
+   Trailing "Subscribe" CTA band. The source ends the page with a full-bleed
+   lime (accent) band — a centered heading + text + button. In our import this
+   is the section's last default-content-wrapper holding a button link. Pull it
+   out to the viewport edges (the boilerplate centers .section > div to 1200px,
+   so explicit negative inline margins break it full-bleed) and center it.
+   Scoped to :last-child + :has(button link) so it never touches the blog
+   article body or the about-us page (both verified 0 matches).
+   --------------------------------------------------------------------------- */
+/* stylelint-disable-next-line no-descending-specificity */
+body:not(.blog) main > .section > .default-content-wrapper:last-child:has(> p a) {
+  width: auto;
+  max-width: none;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  padding: 64px 0;
+  background-color: rgb(244 254 139);
+  text-align: center;
+}
+
+body:not(.blog) main > .section > .default-content-wrapper:last-child:has(> p a) > * {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+/* Band heading: uppercase Syncopate, matching the source's accent-band title. */
+body:not(.blog) main > .section > .default-content-wrapper:last-child:has(> p a) h2 {
+  font-family: Syncopate, var(--heading-font-family);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: rgb(0 0 0);
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+@media (width >= 900px) {
+  body:not(.blog) main > .section > .default-content-wrapper:last-child:has(> p a) {
+    padding: 128px 0;
+  }
+
+  body:not(.blog) main > .section > .default-content-wrapper:last-child:has(> p a) h2 {
+    font-size: 32px;
+    line-height: 35.2px;
+  }
+}
+
+/* The band's CTA link is a plain default-content <a>; render it as the same
+   solid-black pill used by the columns-feature CTAs (offset shadow, press-in
+   on :active). */
+body:not(.blog) main > .section > .default-content-wrapper:last-child:has(> p a) p a:any-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 16px 0 0;
+  padding: 12px 24px;
+  border: 2px solid var(--color-black);
+  border-radius: 9999px;
+  background-color: var(--color-black);
+  color: rgb(255 255 255);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: var(--shadow-button);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+body:not(.blog) main > .section > .default-content-wrapper:last-child:has(> p a) p a:any-link:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--color-black);
+}
+
+body:not(.blog) main > .section > .default-content-wrapper:last-child:has(> p a) p a:any-link:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 0 var(--color-black);
 }
 

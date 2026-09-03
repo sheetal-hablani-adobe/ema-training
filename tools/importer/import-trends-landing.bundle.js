@@ -35,52 +35,14 @@ var CustomImportScript = (() => {
   };
   var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-  // tools/importer/import-about-us.js
-  var import_about_us_exports = {};
-  __export(import_about_us_exports, {
-    default: () => import_about_us_default
+  // tools/importer/import-trends-landing.js
+  var import_trends_landing_exports = {};
+  __export(import_trends_landing_exports, {
+    default: () => import_trends_landing_default
   });
 
-  // tools/importer/parsers/accordion-faq.js
-  function parse(element, { document }) {
-    const items = element.querySelectorAll("details.faq-item, details, .faq-item");
-    const cells = [];
-    items.forEach((item) => {
-      const summary = item.querySelector("summary.faq-question, summary");
-      let titleCell;
-      const titleSpan = summary ? summary.querySelector("span") : null;
-      if (titleSpan) {
-        titleCell = titleSpan.textContent.trim();
-      } else if (summary) {
-        titleCell = summary.textContent.trim();
-      } else {
-        titleCell = "";
-      }
-      const answer = item.querySelector(".faq-answer, .faq-content");
-      let contentCell;
-      if (answer) {
-        const nodes = Array.from(answer.childNodes).filter((n) => {
-          if (n.nodeType === 3) return n.textContent.trim().length > 0;
-          return true;
-        });
-        contentCell = nodes.length ? nodes : answer;
-      } else {
-        contentCell = "";
-      }
-      if (titleCell || contentCell && contentCell !== "") {
-        cells.push([titleCell, contentCell]);
-      }
-    });
-    if (!cells.length) {
-      element.replaceWith(...element.childNodes);
-      return;
-    }
-    const block = WebImporter.Blocks.createBlock(document, { name: "accordion-faq", cells });
-    element.replaceWith(block);
-  }
-
   // tools/importer/parsers/cards-media.js
-  function parse2(element, { document }) {
+  function parse(element, { document: document2 }) {
     let cardEls;
     const trendImages = element.querySelectorAll(".trend-card-image");
     const directCount = element.querySelectorAll(":scope > *").length;
@@ -88,7 +50,7 @@ var CustomImportScript = (() => {
       cardEls = [];
       const imageDivs = element.querySelectorAll(".trend-card-image");
       imageDivs.forEach((imgDiv) => {
-        const wrapper = document.createElement("div");
+        const wrapper = document2.createElement("div");
         const anchor = imgDiv.closest("a[href]");
         if (anchor && anchor.getAttribute("href")) {
           wrapper.setAttribute("data-card-href", anchor.getAttribute("href"));
@@ -124,19 +86,19 @@ var CustomImportScript = (() => {
           if (labelEl) tagText = labelEl.textContent.trim();
         }
         if (tagText) {
-          const tagP = document.createElement("p");
+          const tagP = document2.createElement("p");
           tagP.textContent = tagText;
           parts.push(tagP);
         }
         if (dateText) {
-          const dateP = document.createElement("p");
+          const dateP = document2.createElement("p");
           dateP.textContent = dateText;
           parts.push(dateP);
         }
-        const titleEl = document.createElement(heading.tagName.toLowerCase());
+        const titleEl = document2.createElement(heading.tagName.toLowerCase());
         const titleText = heading.textContent.trim();
         if (href) {
-          const a = document.createElement("a");
+          const a = document2.createElement("a");
           a.setAttribute("href", href);
           a.textContent = titleText;
           titleEl.appendChild(a);
@@ -145,7 +107,7 @@ var CustomImportScript = (() => {
         }
         parts.push(titleEl);
         Array.from(card.querySelectorAll("p")).filter((p) => p.textContent.trim().length > 0 && heading.compareDocumentPosition(p) & Node.DOCUMENT_POSITION_FOLLOWING).forEach((p) => {
-          const descP = document.createElement("p");
+          const descP = document2.createElement("p");
           descP.textContent = p.textContent.trim();
           parts.push(descP);
         });
@@ -165,7 +127,7 @@ var CustomImportScript = (() => {
       element.replaceWith(...element.childNodes);
       return;
     }
-    const block = WebImporter.Blocks.createBlock(document, { name: "cards-media", cells });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "cards-media", cells });
     element.replaceWith(block);
   }
 
@@ -175,84 +137,32 @@ var CustomImportScript = (() => {
     if (col.querySelector("h1, h2, h3, h4, h5, h6, a, button")) return false;
     return col.textContent.trim().length === 0;
   }
-  function normaliseImageColumn(col, document) {
+  function normaliseImageColumn(col, document2) {
     const media = Array.from(col.querySelectorAll("img, picture"));
     if (media.length < 2) return;
-    const wrapper = document.createElement("div");
+    const wrapper = document2.createElement("div");
     media.forEach((m) => {
       const node = m.tagName === "IMG" && m.closest("picture") ? m.closest("picture") : m;
       if (node.parentElement === wrapper) return;
-      const p = document.createElement("p");
+      const p = document2.createElement("p");
       p.appendChild(node);
       wrapper.appendChild(p);
     });
     col.textContent = "";
     while (wrapper.firstChild) col.appendChild(wrapper.firstChild);
   }
-  function parse3(element, { document }) {
+  function parse2(element, { document: document2 }) {
     const columnEls = Array.from(element.querySelectorAll(":scope > div")).filter((col) => col.textContent.trim().length > 0 || col.querySelector("img, picture, a"));
     if (!columnEls.length) {
       element.replaceWith(...element.childNodes);
       return;
     }
     columnEls.forEach((col) => {
-      if (isImageOnlyColumn(col)) normaliseImageColumn(col, document);
+      if (isImageOnlyColumn(col)) normaliseImageColumn(col, document2);
     });
     const cells = [];
     cells.push(columnEls.map((col) => col));
-    const block = WebImporter.Blocks.createBlock(document, { name: "columns-feature", cells });
-    element.replaceWith(block);
-  }
-
-  // tools/importer/parsers/hero-overlay.js
-  function parse4(element, { document }) {
-    const bgImage = element.querySelector('img.cover-image, img[class*="overlay"], img[class*="background"], img');
-    const body = element.querySelector('.card-body, [class*="card-body"], [class*="text-on-overlay"]');
-    const heading = (body || element).querySelector('h1, h2, h3, [class*="heading"]');
-    const subheading = (body || element).querySelector('p, .subheading, [class*="subheading"]');
-    const ctaLinks = Array.from((body || element).querySelectorAll('.button-group a, a.button, a[class*="button"]'));
-    if (!heading && !subheading && !ctaLinks.length && !bgImage) {
-      element.replaceWith(...element.childNodes);
-      return;
-    }
-    const cells = [];
-    if (bgImage) {
-      cells.push([bgImage]);
-    }
-    const contentCell = [];
-    if (heading) contentCell.push(heading);
-    if (subheading) contentCell.push(subheading);
-    contentCell.push(...ctaLinks);
-    cells.push([contentCell]);
-    const block = WebImporter.Blocks.createBlock(document, { name: "hero-overlay", cells });
-    element.replaceWith(block);
-  }
-
-  // tools/importer/parsers/tabs-profile.js
-  function parse5(element, { document }) {
-    const panes = Array.from(element.querySelectorAll(".tabs-content .tab-pane, .tab-pane"));
-    const menuButtons = Array.from(element.querySelectorAll(".tab-menu .tab-menu-link, .tab-menu button, .tab-menu-link"));
-    if (!panes.length) {
-      element.replaceWith(...element.childNodes);
-      return;
-    }
-    const cells = [];
-    panes.forEach((pane, i) => {
-      const button = menuButtons[i];
-      let labelCell = "";
-      if (button) {
-        const nameEl = button.querySelector("strong");
-        labelCell = nameEl ? nameEl.textContent.trim() : button.textContent.trim().replace(/\s+/g, " ");
-      }
-      if (!labelCell) labelCell = `Tab ${i + 1}`;
-      const contentNodes = Array.from(pane.childNodes).filter((n) => {
-        if (n.nodeType === 3) return n.textContent.trim().length > 0;
-        return true;
-      });
-      const contentCell = contentNodes.length ? contentNodes : pane;
-      cells.push([labelCell, contentCell]);
-    });
-    const block = WebImporter.Blocks.createBlock(document, { name: "tabs-profile", cells });
+    const block = WebImporter.Blocks.createBlock(document2, { name: "columns-feature", cells });
     element.replaceWith(block);
   }
 
@@ -277,56 +187,90 @@ var CustomImportScript = (() => {
     }
   }
 
-  // tools/importer/import-about-us.js
+  // tools/importer/transformers/wknd-trendsetters-sections.js
+  var TransformHook2 = { beforeTransform: "beforeTransform", afterTransform: "afterTransform" };
+  var SECTION_STYLE_BY_CLASS = {
+    "secondary-section": "grey",
+    "accent-section": "accent"
+  };
+  function resolveSectionStyle(sectionEl, template) {
+    const classes = Object.keys(SECTION_STYLE_BY_CLASS);
+    for (let i = 0; i < classes.length; i += 1) {
+      if (sectionEl.classList.contains(classes[i])) return SECTION_STYLE_BY_CLASS[classes[i]];
+    }
+    const blocks = template && Array.isArray(template.blocks) ? template.blocks : [];
+    for (let i = 0; i < blocks.length; i += 1) {
+      const b = blocks[i];
+      if (!b.section || !Array.isArray(b.instances)) continue;
+      const hit = b.instances.some((sel) => {
+        try {
+          return sectionEl.matches(sel);
+        } catch (e) {
+          return false;
+        }
+      });
+      if (hit) return b.section;
+    }
+    return null;
+  }
+  function transform2(hookName, element, payload) {
+    if (hookName !== TransformHook2.afterTransform) return;
+    const template = payload && payload.template || {};
+    const mainContent = element.querySelector("#main-content") || element;
+    const sections = Array.from(
+      mainContent.querySelectorAll(":scope > header.section, :scope > section.section")
+    );
+    if (sections.length < 2) return;
+    sections.forEach((sectionEl, index) => {
+      if (index > 0) {
+        sectionEl.before(document.createElement("hr"));
+      }
+      const style = resolveSectionStyle(sectionEl, template);
+      if (style) {
+        const metadataBlock = WebImporter.Blocks.createBlock(document, {
+          name: "Section Metadata",
+          cells: { Style: style }
+        });
+        sectionEl.append(metadataBlock);
+      }
+    });
+  }
+
+  // tools/importer/import-trends-landing.js
   var parsers = {
-    "accordion-faq": parse,
-    "cards-media": parse2,
-    "columns-feature": parse3,
-    "hero-overlay": parse4,
-    "tabs-profile": parse5
+    "cards-media": parse,
+    "columns-feature": parse2
   };
   var transformers = [
-    transform
+    transform,
+    transform2
   ];
   var PAGE_TEMPLATE = {
-    name: "about-us",
-    description: "About-us editorial page: two-column intros, image and article card grids, profile tabs, FAQ accordion, and an overlay hero banner.",
+    name: "trends-landing",
+    description: "Trends landing page (hero + feature/card grids + accent CTA band)",
     urls: [
-      "https://wknd-trendsetters.site/about-us",
-      "https://wknd-trendsetters.site/case-studies",
-      "https://wknd-trendsetters.site/"
+      "https://wknd-trendsetters.site/fashion-trends-young-adults",
+      "https://wknd-trendsetters.site/fashion-trends-of-the-season"
     ],
     blocks: [
       {
         name: "columns-feature",
         instances: [
           "#main-content > header.section.secondary-section > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl",
-          "#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.tablet-1-column.grid-gap-lg"
+          // Split feature: a 2-column grid that stacks single-column (tablet-1-column
+          // grid-gap-lg). Exclude desktop-N-column so it never grabs the 3-up feature
+          // card grid (desktop-3-column tablet-1-column grid-gap-lg), which is cards-media.
+          '#main-content > section.section > div.container > div.grid-layout.tablet-1-column.grid-gap-lg:not([class*="desktop-"])'
         ]
       },
       {
         name: "cards-media",
         instances: [
-          "#main-content > section.section.secondary-section:nth-of-type(2) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-sm",
-          "#main-content > section.section.secondary-section:nth-of-type(4) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md"
-        ]
-      },
-      {
-        name: "tabs-profile",
-        instances: [
-          "#main-content > section.section:nth-of-type(3) > div.container > div.tabs-wrapper"
-        ]
-      },
-      {
-        name: "accordion-faq",
-        instances: [
-          "#main-content > section.section:nth-of-type(5) div.faq-list"
-        ]
-      },
-      {
-        name: "hero-overlay",
-        instances: [
-          "#main-content > section.section.inverse-section > div.container > div.grid-layout.desktop-1-column"
+          "#main-content > section.section > div.container > div.grid-layout.desktop-3-column.tablet-1-column.grid-gap-xxl",
+          "#main-content > section.section > div.container > div.grid-layout.desktop-3-column.tablet-1-column.grid-gap-lg",
+          "#main-content > section.section > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md",
+          "#main-content > section.section > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-sm",
+          "#main-content > section.section > div.container > div.grid-layout.desktop-3-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-sm"
         ]
       }
     ]
@@ -343,11 +287,11 @@ var CustomImportScript = (() => {
       }
     });
   }
-  function findBlocksOnPage(document, template) {
+  function findBlocksOnPage(document2, template) {
     const pageBlocks = [];
     template.blocks.forEach((blockDef) => {
       blockDef.instances.forEach((selector) => {
-        const elements = document.querySelectorAll(selector);
+        const elements = document2.querySelectorAll(selector);
         if (elements.length === 0) {
           console.warn(`Block "${blockDef.name}" selector not found: ${selector}`);
         }
@@ -364,18 +308,27 @@ var CustomImportScript = (() => {
     console.log(`Found ${pageBlocks.length} block instances on page`);
     return pageBlocks;
   }
-  var import_about_us_default = {
+  var import_trends_landing_default = {
     transform: (payload) => {
-      const { document, url, html, params } = payload;
-      const main = document.body;
+      const { document: document2, url, html, params } = payload;
+      const main = document2.body;
       executeTransformers("beforeTransform", main, payload);
-      const pageBlocks = findBlocksOnPage(document, PAGE_TEMPLATE);
+      const heroButtonGroup = document2.querySelector(
+        "#main-content > header.section.secondary-section .button-group"
+      );
+      if (heroButtonGroup) {
+        const heroLinks = heroButtonGroup.querySelectorAll(":scope > a");
+        heroLinks.forEach((a, i) => {
+          if (i > 0) a.remove();
+        });
+      }
+      const pageBlocks = findBlocksOnPage(document2, PAGE_TEMPLATE);
       pageBlocks.forEach((block) => {
         if (!block.element.parentNode) return;
         const parser = parsers[block.name];
         if (parser) {
           try {
-            parser(block.element, { document, url, params });
+            parser(block.element, { document: document2, url, params });
           } catch (e) {
             console.error(`Failed to parse ${block.name} (${block.selector}):`, e);
           }
@@ -384,10 +337,10 @@ var CustomImportScript = (() => {
         }
       });
       executeTransformers("afterTransform", main, payload);
-      const hr = document.createElement("hr");
+      const hr = document2.createElement("hr");
       main.appendChild(hr);
-      WebImporter.rules.createMetadata(main, document);
-      WebImporter.rules.transformBackgroundImages(main, document);
+      WebImporter.rules.createMetadata(main, document2);
+      WebImporter.rules.transformBackgroundImages(main, document2);
       WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
       const rawPath = new URL(params.originalURL).pathname.replace(/\/$/, "").replace(/\.html?$/, "");
       const path = WebImporter.FileUtils.sanitizePath(rawPath === "" ? "/index" : rawPath);
@@ -395,12 +348,12 @@ var CustomImportScript = (() => {
         element: main,
         path,
         report: {
-          title: document.title,
+          title: document2.title,
           template: PAGE_TEMPLATE.name,
           blocks: pageBlocks.map((b) => b.name)
         }
       }];
     }
   };
-  return __toCommonJS(import_about_us_exports);
+  return __toCommonJS(import_trends_landing_exports);
 })();

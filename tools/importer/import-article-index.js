@@ -2,69 +2,59 @@
 /* global WebImporter */
 
 // PARSER IMPORTS
-import accordionFaqParser from './parsers/accordion-faq.js';
 import cardsMediaParser from './parsers/cards-media.js';
 import columnsFeatureParser from './parsers/columns-feature.js';
-import heroOverlayParser from './parsers/hero-overlay.js';
-import tabsProfileParser from './parsers/tabs-profile.js';
 
 // TRANSFORMER IMPORTS
 import wkndTrendsettersCleanupTransformer from './transformers/wknd-trendsetters-cleanup.js';
+import wkndTrendsettersSectionsTransformer from './transformers/wknd-trendsetters-sections.js';
 
 // PARSER REGISTRY
 const parsers = {
-  'accordion-faq': accordionFaqParser,
   'cards-media': cardsMediaParser,
   'columns-feature': columnsFeatureParser,
-  'hero-overlay': heroOverlayParser,
-  'tabs-profile': tabsProfileParser,
 };
 
 // TRANSFORMER REGISTRY
+// Cleanup runs first (removes chrome); the sections transformer runs last in
+// afterTransform to split the page into per-source-section EDS sections and add
+// grey/accent Section Metadata for the alternating banded backgrounds.
 const transformers = [
   wkndTrendsettersCleanupTransformer,
+  wkndTrendsettersSectionsTransformer,
 ];
 
 // PAGE TEMPLATE CONFIGURATION - Embedded from page-templates.json
+// Section-* entries are omitted from this block list; the sections transformer
+// (wknd-trendsetters-sections.js) derives the grey/accent banded backgrounds
+// from the source DOM classes and emits section breaks + Section Metadata.
+// Selectors are CLASS-BASED (keyed off the distinguishing grid-layout classes)
+// rather than positional, so the same template covers every article-index page
+// (/blog, /fashion-insights, ...) despite differing section counts/order:
+//   - columns-feature: the hero (tablet-1-column grid-gap-xxl) and the featured
+//     split banner (tablet-1-column grid-gap-lg).
+//   - cards-media: the article-card grid (desktop-4-column ... grid-gap-md) and,
+//     where present, an image gallery (desktop-3-column ... grid-gap-sm).
 const PAGE_TEMPLATE = {
-  name: 'about-us',
-  description: 'About-us editorial page: two-column intros, image and article card grids, profile tabs, FAQ accordion, and an overlay hero banner.',
+  name: 'article-index',
+  description: 'Blog listing / article index page (intro hero + featured article banner + article-card grid + optional gallery + newsletter CTA)',
   urls: [
-    'https://wknd-trendsetters.site/about-us',
-    'https://wknd-trendsetters.site/case-studies',
-    'https://wknd-trendsetters.site/',
+    'https://wknd-trendsetters.site/blog',
+    'https://wknd-trendsetters.site/fashion-insights',
   ],
   blocks: [
     {
       name: 'columns-feature',
       instances: [
         '#main-content > header.section.secondary-section > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl',
-        '#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.tablet-1-column.grid-gap-lg',
+        '#main-content > section.section > div.container > div.grid-layout.tablet-1-column.grid-gap-lg',
       ],
     },
     {
       name: 'cards-media',
       instances: [
-        '#main-content > section.section.secondary-section:nth-of-type(2) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-sm',
-        '#main-content > section.section.secondary-section:nth-of-type(4) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md',
-      ],
-    },
-    {
-      name: 'tabs-profile',
-      instances: [
-        '#main-content > section.section:nth-of-type(3) > div.container > div.tabs-wrapper',
-      ],
-    },
-    {
-      name: 'accordion-faq',
-      instances: [
-        '#main-content > section.section:nth-of-type(5) div.faq-list',
-      ],
-    },
-    {
-      name: 'hero-overlay',
-      instances: [
-        '#main-content > section.section.inverse-section > div.container > div.grid-layout.desktop-1-column',
+        '#main-content > section.section > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md',
+        '#main-content > section.section > div.container > div.grid-layout.desktop-3-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-sm',
       ],
     },
   ],

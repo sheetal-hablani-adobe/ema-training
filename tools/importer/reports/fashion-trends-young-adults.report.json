@@ -1,0 +1,14 @@
+{
+  "status": "success",
+  "url": "https://wknd-trendsetters.site/fashion-trends-young-adults",
+  "path": "fashion-trends-young-adults",
+  "timestamp": "2026-09-03T06:25:55.156Z",
+  "title": "Fashion Trends for Young Adults - Fashion Blog",
+  "template": "trends-landing",
+  "blocks": [
+    "columns-feature",
+    "cards-media",
+    "cards-media",
+    "cards-media"
+  ]
+}

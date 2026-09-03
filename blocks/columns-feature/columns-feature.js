@@ -14,17 +14,33 @@ export default function decorate(block) {
       if (p.querySelector('a')) p.classList.add('columns-feature-cta');
     });
   } else {
-    // Non-hero (e.g. article intro): a paragraph of 2+ links with no other copy
-    // is a breadcrumb trail. Tag it so CSS can render a chevron between crumbs
-    // (the source's inline separator SVG is dropped on import).
+    // Non-hero (e.g. article intro, split feature). A paragraph of links with no
+    // other copy is either a breadcrumb trail (2+ links) or a single CTA link.
+    // Tag each so CSS can style them without :has() (breadcrumb chevrons; solid
+    // pill CTA). The source's inline separator SVG is dropped on import.
+
+    // Split-feature promo variant: a text column whose FIRST content element is a
+    // heading (image + heading + copy + single CTA), as opposed to the article
+    // intro / featured banner whose text column leads with a breadcrumb/meta
+    // paragraph. Tag it so its copy can be centered without touching those. The
+    // text column is the block cell that carries the heading.
+    const headingCol = [...block.querySelectorAll(':scope > div > div')]
+      .find((col) => {
+        const first = col.querySelector('h1, h2, h3, h4, h5, h6, p');
+        return first && /^H[1-6]$/.test(first.tagName);
+      });
+    if (headingCol) headingCol.classList.add('columns-feature-promo');
+
     [...block.querySelectorAll('p')].forEach((p) => {
       const links = p.querySelectorAll(':scope > a');
       const textOutsideLinks = [...p.childNodes]
         .filter((n) => n.nodeType === Node.TEXT_NODE)
         .map((n) => n.textContent.trim())
         .join('');
-      if (links.length >= 2 && textOutsideLinks.length === 0) {
+      if (textOutsideLinks.length === 0 && links.length >= 2) {
         p.classList.add('columns-feature-breadcrumbs');
+      } else if (textOutsideLinks.length === 0 && links.length === 1) {
+        p.classList.add('columns-feature-cta');
       }
     });
   }

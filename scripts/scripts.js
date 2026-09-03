@@ -143,6 +143,35 @@ function decorateButtons(main) {
 }
 
 /**
+ * Applies Section Metadata "Style" values as classes on each section.
+ * This project's aem.js `decorateSections` is trimmed and does not process the
+ * `section-metadata` block, so read it here: for every `.section` that contains a
+ * `div.section-metadata`, take its `Style` row value (e.g. `grey`, `accent`) and
+ * add each token as a class on the section, then remove the metadata block. This
+ * powers the alternating banded backgrounds (see the `.section.grey` / `.section.accent`
+ * rules in styles/styles.css).
+ * @param {Element} main The main element
+ */
+function decorateSectionStyles(main) {
+  main.querySelectorAll(':scope > .section > .section-metadata').forEach((meta) => {
+    const section = meta.closest('.section');
+    meta.querySelectorAll(':scope > div').forEach((row) => {
+      const cells = row.children;
+      if (cells.length < 2) return;
+      const key = cells[0].textContent.trim().toLowerCase();
+      const value = cells[1].textContent.trim();
+      if (key === 'style' && value) {
+        value.split(',').forEach((token) => {
+          const cls = token.trim().toLowerCase().replace(/\s+/g, '-');
+          if (cls) section.classList.add(cls);
+        });
+      }
+    });
+    meta.remove();
+  });
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
@@ -151,6 +180,7 @@ export function decorateMain(main) {
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
+  decorateSectionStyles(main);
   decorateBlocks(main);
   decorateButtons(main);
 }

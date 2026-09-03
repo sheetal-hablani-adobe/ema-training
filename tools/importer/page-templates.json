@@ -7,7 +7,10 @@
       "name": "about-us",
       "urls": [
         "https://wknd-trendsetters.site/about-us",
-        "https://wknd-trendsetters.site/magazine/article-1"
+        "https://wknd-trendsetters.site/fashion-trends-young-adults-casual-sport",
+        "https://wknd-trendsetters.site/magazine/article-1",
+        "https://wknd-trendsetters.site/case-studies",
+        "https://wknd-trendsetters.site/"
       ],
       "representativeUrl": "https://wknd-trendsetters.site/about-us",
       "description": "To be named in naming step",
@@ -23,7 +26,8 @@
           "name": "columns-feature",
           "instances": [
             "#main-content > header.section.secondary-section > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl",
-            "#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.tablet-1-column.grid-gap-lg"
+            "#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.tablet-1-column.grid-gap-lg",
+            "#main-content div.grid-layout.tablet-1-column.grid-gap-lg"
           ]
         },
         {
@@ -37,7 +41,8 @@
           "name": "cards-media",
           "instances": [
             "#main-content > section.section.secondary-section:nth-of-type(2) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-sm",
-            "#main-content > section.section.secondary-section:nth-of-type(4) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md"
+            "#main-content > section.section.secondary-section:nth-of-type(4) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md",
+            "#main-content div.grid-layout.desktop-4-column.grid-gap-md"
           ]
         },
         {
@@ -74,7 +79,7 @@
         "https://wknd-trendsetters.site/blog/ace-pro-court-polo"
       ],
       "representativeUrl": "https://wknd-trendsetters.site/blog/ace-pro-court-polo",
-      "description": "Blog article page: two-column article header (cover image + title/byline/meta/tag) and a long-form article body with an embedded spec table.",
+      "description": "To be named in naming step",
       "blocks": [
         {
           "name": "columns-article",
@@ -90,6 +95,113 @@
         }
       ],
       "urlPattern": "/blog/*"
+    },
+    {
+      "name": "article-index",
+      "urls": [
+        "https://wknd-trendsetters.site/blog",
+        "https://wknd-trendsetters.site/fashion-insights"
+      ],
+      "representativeUrl": "https://wknd-trendsetters.site/blog",
+      "description": "Blog listing / article index page",
+      "blocks": [
+        {
+          "name": "columns-feature",
+          "instances": [
+            "#main-content > header.section.secondary-section > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl",
+            "#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.tablet-1-column.grid-gap-lg"
+          ]
+        },
+        {
+          "name": "cards-media",
+          "instances": [
+            "#articles > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md"
+          ]
+        },
+        {
+          "name": "section-rc3",
+          "instances": [
+            "#articles"
+          ],
+          "section": "grey"
+        },
+        {
+          "name": "section-rc4",
+          "instances": [
+            "#main-content > section.section.accent-section"
+          ],
+          "section": "accent"
+        }
+      ]
+    },
+    {
+      "name": "trends-landing",
+      "urls": [
+        "https://wknd-trendsetters.site/fashion-trends-young-adults",
+        "https://wknd-trendsetters.site/fashion-trends-of-the-season"
+      ],
+      "representativeUrl": "https://wknd-trendsetters.site/fashion-trends-young-adults",
+      "description": "Trends landing page (hero + feature sections + card grid)",
+      "blocks": [
+        {
+          "name": "columns-feature",
+          "instances": [
+            "#main-content > header.section.secondary-section > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl"
+          ]
+        },
+        {
+          "name": "cards-media",
+          "instances": [
+            "#main-content > section.section:nth-of-type(1) > div.container > div.grid-layout.desktop-3-column.tablet-1-column.grid-gap-xxl",
+            "#trends > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-md",
+            "#main-content > section.section.secondary-section:nth-of-type(4) > div.container > div.grid-layout.desktop-4-column.tablet-2-column-1.mobile-portrait-1-column.grid-gap-sm"
+          ]
+        },
+        {
+          "name": "section-rc3",
+          "instances": [
+            "#main-content > section.section.secondary-section:nth-of-type(2)"
+          ],
+          "section": "grey"
+        },
+        {
+          "name": "section-rc5",
+          "instances": [
+            "#main-content > section.section.secondary-section:nth-of-type(4)"
+          ],
+          "section": "grey"
+        },
+        {
+          "name": "section-rc6",
+          "instances": [
+            "#main-content > section.section.accent-section"
+          ],
+          "section": "accent"
+        }
+      ]
+    },
+    {
+      "name": "faq",
+      "urls": [
+        "https://wknd-trendsetters.site/faq"
+      ],
+      "representativeUrl": "https://wknd-trendsetters.site/faq",
+      "description": "FAQ page: hero + accordion FAQ list + contact columns + accent CTA",
+      "blocks": [
+        {
+          "name": "columns-feature",
+          "instances": [
+            "#main-content > header.section.secondary-section > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl",
+            "#main-content > section.section.secondary-section:nth-of-type(2) > div.container > div.grid-layout.tablet-1-column.grid-gap-xxl"
+          ]
+        },
+        {
+          "name": "accordion-faq",
+          "instances": [
+            "#main-content > section.section:nth-of-type(1) div.faq-list"
+          ]
+        }
+      ]
     }
   ]
 }
